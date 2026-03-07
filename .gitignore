@@ -1,0 +1,30 @@
+### Java/JavaFX
+# Compiled Java class files and build artifacts
+*.class
+*.jar
+*.war
+*.ear
+/bin/
+/build/
+/target/
+hs_err_pid* # JVM crash logs
+
+# Maven-specific ignores
+pom.xml.tag
+pom.xml.next
+pom.xml.bak
+pom.xml.versions
+pom.xml.releaseBackup
+poms/
+# Maven project documentation
+*/apidocs/
+*/testapidocs/
+
+# VS Code-specific ignores
+.vscode/
+# VS Code Java extensions
+.classpath
+.project
+.settings
+*.vmoptions
+*.launch
