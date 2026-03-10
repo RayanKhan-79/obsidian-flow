@@ -7,6 +7,11 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.security.AuthProvider;
+
+import com.example.backend.services.auth.AuthService;
+
+// import com.example.backend.util.DatabaseManager;
 
 /**
  * JavaFX App
@@ -32,6 +37,7 @@ public class App extends Application {
     }
 
     public static void main(String[] args) {
+        AuthService.GetInstance().register("john", "doe", "john.do1e@gmail.com", "STYLESHEET_CASPIAN");
         launch();
     }
 
