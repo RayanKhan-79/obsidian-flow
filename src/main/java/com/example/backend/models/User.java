@@ -13,23 +13,14 @@ public class User
     public String email;
     public String password;
 
-    public User(Long id, String fname, String lname, String email, String password) 
-    {
-        Id = id;
-        this.fname = fname;
-        this.lname = lname;
-        this.email = email;
-        this.password = password;
-    }
-
     public User(ResultSet rs)
     {
         try 
         {
-            Id = rs.getLong(Constants.Id);
-            fname = rs.getString(Constants.First_Name);
-            lname = rs.getString(Constants.LAST_Name);
-            email = rs.getString(Constants.Email);
+            Id = rs.getLong(Constants.ID);
+            fname = rs.getString(Constants.FIRST_NAME);
+            lname = rs.getString(Constants.LAST_NAME);
+            email = rs.getString(Constants.EMAIL);
             password = rs.getString(Constants.Password);
 
         } catch (SQLException e) {

@@ -1,18 +1,24 @@
 package com.example.backend.models;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import com.example.backend.services.database.Constants;
 
 public class ProjectMember extends User
 {
+    Long userId;
 
     public ProjectMember(ResultSet rs) 
     {
         super(rs);
+        try 
+        {
+            userId = rs.getLong(Constants.USER_ID);
+        } catch (SQLException e) {
+            System.out.println("Project Member Parsing Error");
+            throw new RuntimeException();
+        }
     }
 
-    public ProjectMember(Long id, String fname, String lname, String email, String password) 
-    {
-        super(id, fname, lname, email, password);
-    }
-        
 }

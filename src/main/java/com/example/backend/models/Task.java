@@ -11,29 +11,20 @@ import com.example.backend.services.database.Constants;
 public class Task 
 {
     public Long Id;
+    public Long project_id;
     public String title;
     public String description;
     public Long priority;
     public TaskStatus status;
     public LocalDateTime dueDate;
     public LocalDateTime createdDate;
-    
-    public Task(Long Id, String title, String description, Long priority, TaskStatus status, LocalDateTime dueDate, LocalDateTime createdDate) 
-    {
-        this.Id = Id;
-        this.title = title;
-        this.description = description;
-        this.priority = priority;
-        this.status = status;
-        this.dueDate = dueDate;
-        this.createdDate = createdDate;
-    }
 
     public Task(ResultSet rs)
     {
         try 
         {
-            Id = rs.getLong(Constants.Id);
+            Id = rs.getLong(Constants.ID);
+            project_id = rs.getLong(Constants.PROJECT_ID);
             title = rs.getString(Constants.Title);
             description = rs.getString(Constants.Description);
             status = Enum.valueOf(TaskStatus.class, rs.getString(Constants.Status));
