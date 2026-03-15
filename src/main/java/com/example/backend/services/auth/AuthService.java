@@ -2,7 +2,8 @@ package com.example.backend.services.auth;
 
 import java.util.Optional;
 
-import com.example.backend.model.User;
+import com.example.backend.enums.UserTypes;
+import com.example.backend.models.User;
 import com.example.backend.services.database.DBService;
 
 public class AuthService 
@@ -28,9 +29,9 @@ public class AuthService
         return currentUser.isPresent();
     }
     
-    public Boolean register(String firstName, String lastName, String email, String password)
+    public Boolean register(UserTypes userType, String firstName, String lastName, String email, String password)
     {
-        DBService.GetInstance().CreateUser(firstName, lastName, email, password);
+        DBService.GetInstance().CreateUser(userType, firstName, lastName, email, password);
         return login(email, password);
     }
 
