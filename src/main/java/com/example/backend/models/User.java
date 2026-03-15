@@ -1,7 +1,9 @@
-package com.example.backend.model;
+package com.example.backend.models;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import com.example.backend.services.database.Constants;
 
 public class User 
 {
@@ -24,14 +26,15 @@ public class User
     {
         try 
         {
-            Id = rs.getLong("Id");
-            fname = rs.getString("first_name");
-            lname = rs.getString("last_name");
-            email = rs.getString("email");
-            password = rs.getString("password");
+            Id = rs.getLong(Constants.Id);
+            fname = rs.getString(Constants.First_Name);
+            lname = rs.getString(Constants.LAST_Name);
+            email = rs.getString(Constants.Email);
+            password = rs.getString(Constants.Password);
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("User Parsing Error");
+            System.exit(1);
         }
     }
 }
