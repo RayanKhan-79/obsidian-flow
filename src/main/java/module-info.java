@@ -5,8 +5,8 @@ module com.example
     requires javafx.fxml;
 
     opens com.example to javafx.fxml;
-    opens com.example.backend.model to javafx.fxml;
+    opens com.example.backend.models to javafx.fxml;
         
     exports com.example;
-    exports com.example.backend.model;
+    exports com.example.backend.models;
 }
