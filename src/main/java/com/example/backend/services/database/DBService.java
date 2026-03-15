@@ -5,16 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Stream;
-
-import com.example.backend.enums.UserTypes;
-import com.example.backend.models.Task;
-import com.example.backend.models.User;
-import com.example.backend.util.Util;
 
 public class DBService 
 {
@@ -35,17 +26,19 @@ public class DBService
         try 
         {
             connection = DriverManager.getConnection(DB_URL);
-            CreateUserTable();
-            CreateTaskTable();
-            CreateProjectMemberTable();
-            CreateProjectManagerTable();
+            CreateUsersTable();
+            CreateProjectsTable();
+            CreateTasksTable();
+            CreateProjectMembersTable();
+            CreateProjectManagersTable();
+            CreateProjectMembershipTable();
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException();
         }
     }
 
-    private void CreateUserTable() throws SQLException  
+    private void CreateUsersTable() throws SQLException  
     {
         String sql = """ 
             CREATE TABLE IF NOT EXISTS Users (
@@ -61,35 +54,36 @@ public class DBService
         System.out.println("User Table Created");
     }
 
-    private void CreateProjectMemberTable() throws SQLException
+    private void CreateProjectMembersTable() throws SQLException
     {
         String sql = """ 
             CREATE TABLE IF NOT EXISTS Project_Members (
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                user_Id INTEGER REFERENCES Users(Id)
+                user_id INTEGER REFERENCES Users(Id)
             )
         """;
         executeUpdate(sql);
         System.out.println("Member Table Created");
     }
 
-    private void CreateProjectManagerTable() throws SQLException
+    private void CreateProjectManagersTable() throws SQLException
     {
         String sql = """ 
             CREATE TABLE IF NOT EXISTS Project_Managers (
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                user_Id INTEGER REFERENCES Users(Id)
+                user_id INTEGER REFERENCES Users(Id)
             )
         """;
         executeUpdate(sql);
         System.out.println("Manager Table Created");
     }
 
-    private void CreateTaskTable() throws SQLException  
+    private void CreateTasksTable() throws SQLException  
     {
         String sql = """    
             CREATE TABLE IF NOT EXISTS Tasks (
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                project_id INTEGER REFERENCES Projects(Id),
                 title TEXT NOT NULL,
                 description TEXT,
                 priority INT,
@@ -103,7 +97,39 @@ public class DBService
 
     }
 
-    private int executeUpdate(String sql, Object... params) throws SQLException
+    // Many to Many Table Project - Project Members
+    private void CreateProjectMembershipTable() throws SQLException
+    {
+        String sql = """
+            CREATE TABLE IF NOT EXISTS Project_Memberships (
+                Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                project_member_id INTEGER REFERENCES Users(Id),
+                project_id INTEGER REFERENCES Projects(Id),
+                assignment_date TEXT NOT NULL
+            )
+        """;
+
+        executeUpdate(sql);
+        System.out.println("Project Membership Table Created");
+    }
+
+    private void CreateProjectsTable() throws SQLException
+    {
+        String sql = """
+            CREATE TABLE IF NOT EXISTS Projects (
+                Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                title TEXT NOT NULL,
+                manager_id INTEGER REFERENCES Users(Id),
+                created_date TEXT NOT NULL,
+            )
+        """;
+
+        executeUpdate(sql);
+        System.out.println("Projects Table Created");
+    }
+
+
+    public Integer executeUpdate(String sql, Object... params) throws SQLException
     {    
         PreparedStatement pstmt = connection.prepareStatement(sql);
         for (int i = 0; i < params.length; i++) {
@@ -112,7 +138,7 @@ public class DBService
         return pstmt.executeUpdate();
     }
 
-    private ResultSet executeQuery(String sql, Object... params)
+    public ResultSet executeQuery(String sql, Object... params)
     {
         try 
         {
@@ -129,6 +155,19 @@ public class DBService
         }
     }
 
+    public String GetUpdateSQL(Map<String, Object> updates) {
+        var stream = updates.entrySet().stream();
+        var mapped = stream.map((entry) -> {
+            return String.format(
+                "%s = %s", 
+                entry.getKey().toString(), 
+                entry.getValue().toString()
+            );
+        });
+        var updateSql = String.join(",\n", mapped.toList());
+        return updateSql;
+    }
+
     public Long GetInsertedId()
     {
         try (PreparedStatement stmt = connection.prepareStatement("SELECT last_insert_rowid()")) {
@@ -140,117 +179,6 @@ public class DBService
             throw new RuntimeException();
         } catch (Exception e) {
             throw new RuntimeException();
-        }
-    }
-
-    public void CreateUser(UserTypes userType, Object... params) 
-    {
-        try 
-        {
-            executeUpdate(
-                "INSERT INTO USERS (first_name, last_name, email, password, user_type) VALUES (?, ?, ?, ?, ?)",
-                Stream.concat(Arrays.stream(params), Stream.of(userType.toString())).toArray()
-            );
-            if (userType == UserTypes.PROJECT_MANAGER)
-                executeUpdate(
-                    "INSERT INTO Project_Managers (user_Id) VALUES (?)", 
-                    GetInsertedId()
-                );
-            if (userType == UserTypes.PROJECT_MEMBER)
-                executeUpdate(
-                    "INSERT INTO Project_Managers (user_Id) VALUES (?)", 
-                    GetInsertedId()
-                );
-        } catch (SQLException e) {
-            System.out.println("could not create user invalid arguments");
-            throw new RuntimeException();
-        }
-    }
-
-    public Optional<User> FindUserById(Long Id)
-    {
-        String sql = "SELECT * FROM USERS WHERE Id = ?";
-        ResultSet result = executeQuery(sql, Id);
-
-        return Util.MapResultToModel(result, User.class);
-    }
-
-    
-    public Optional<User> FindUserByEmailAndPassword(String email, String password)
-    {
-        String sql = "SELECT * FROM USERS WHERE email = ? AND password = ?";
-        ResultSet result = executeQuery(sql, email, password);
-        return Util.MapResultToModel(result, User.class);
-    }
-
-    public Boolean CreateTask(Object... params)
-    {
-        try 
-        {
-            String sql = String.format(
-                "INSERT INTO tasks (title, description, status, priority, due_date, created_date) VALUES (?, ?, ?, ?, ?, %)", 
-                LocalDateTime.now().toString()
-            );
-
-            executeQuery(sql, params);
-            return true;
-
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    public Boolean DeleteTask(Long Id)
-    {
-        try 
-        {
-            String sql = "DELETE FROM tasks WHERE Id = ?";
-            executeUpdate(sql, Id);
-            return true;
-            
-        } catch (Exception e) {
-            
-            return false;
-        }
-    }
-
-    public Optional<Task> FindTask(Long Id)
-    {
-        try 
-        {
-            String sql = "SELECT * FROM tasks WHERE Id = ?";
-            ResultSet result = executeQuery(sql, Id);
-
-            return Util.MapResultToModel(result, Task.class);
-
-        } catch (Exception e) {
-            return Optional.empty();
-        }
-    }
-
-    public Boolean UpdateTask(Long Id, Map<String, Object> update)
-    {
-        try 
-        {
-
-            var stream = update.entrySet().stream();
-            var mapped = stream.map((entry) -> {
-                return String.format(
-                    "%s = %s", 
-                    entry.getKey().toString(), 
-                    entry.getValue().toString()
-                );
-            });
-            var updateSql = String.join(",\n", mapped.toList());
-
-
-            String sql = String.format("UPDATE Tasks SET %s WHERE Id = %d", updateSql, Id);
-            System.out.println(sql);
-            // executeUpdate(sql);
-
-            return true;    
-        } catch (Exception e) {
-            return false;
         }
     }
 }

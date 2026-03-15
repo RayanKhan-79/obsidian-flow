@@ -12,9 +12,7 @@ public class Util
             var constructor = type.getConstructor(ResultSet.class);
             if (result.next())
                 return Optional.of(constructor.newInstance(result));
-        } 
-        catch (Exception e) 
-        {
+        } catch (Exception e) {
             return Optional.empty();
         }
         
