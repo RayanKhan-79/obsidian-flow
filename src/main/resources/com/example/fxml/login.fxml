@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<ScrollPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.controllers.LoginController"
+            fitToWidth="true" fitToHeight="true"
+            style="-fx-background-color: linear-gradient(to bottom right, #667eea, #764ba2); -fx-background: transparent;">
+
+    <AnchorPane fx:id="rootPane" prefHeight="600" prefWidth="1000"
+                style="-fx-background-color: linear-gradient(to bottom right, #667eea, #764ba2);">
+
+        <!-- Main Content Card -->
+        <VBox alignment="CENTER" spacing="30" 
+              style="-fx-background-color: white; -fx-background-radius: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 20, 0, 0, 10);"
+              prefWidth="400" prefHeight="500"
+              AnchorPane.topAnchor="50" AnchorPane.bottomAnchor="50" 
+              AnchorPane.leftAnchor="300" AnchorPane.rightAnchor="300">
+        
+        <padding>
+            <Insets top="40" right="40" bottom="40" left="40"/>
+        </padding>
+
+        <!-- Logo and Title -->
+        <VBox alignment="CENTER" spacing="15">
+            <ImageView fx:id="logoImage" fitHeight="80" fitWidth="80" 
+                      preserveRatio="true">
+                <Image url="@../images/logo.jpeg" />
+            </ImageView>
+            <Label text="Welcome Back!" 
+                   style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #2d3748;"/>
+            <Label text="Sign in to continue to Task Manager" 
+                   style="-fx-font-size: 14px; -fx-text-fill: #718096;"/>
+        </VBox>
+
+        <!-- Error Label -->
+        <Label fx:id="errorLabel" visible="false" 
+               style="-fx-background-color: #fed7d7; -fx-background-radius: 5; -fx-padding: 10; -fx-text-fill: #c53030;"
+               alignment="CENTER" maxWidth="Infinity"/>
+
+        <!-- Login Form -->
+        <VBox spacing="20">
+            <VBox spacing="8">
+                <Label text="Username or Email" 
+                       style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #4a5568;"/>
+                <TextField fx:id="usernameField" promptText="Enter your username or email"
+                          style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-padding: 12; -fx-background-color: #f7fafc; -fx-border-color: #e2e8f0; -fx-border-width: 1;"/>
+            </VBox>
+
+            <VBox spacing="8">
+                <Label text="Password" 
+                       style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #4a5568;"/>
+                <PasswordField fx:id="passwordField" promptText="Enter your password"
+                              style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-padding: 12; -fx-background-color: #f7fafc; -fx-border-color: #e2e8f0; -fx-border-width: 1;"/>
+            </VBox>
+
+            <!-- Remember Me and Forgot Password -->
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <CheckBox fx:id="rememberMeCheck" text="Remember me" 
+                         style="-fx-text-fill: #4a5568;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Hyperlink text="Forgot Password?" onAction="#handleForgotPassword"
+                          style="-fx-text-fill: #667eea; -fx-border-color: transparent;"/>
+            </HBox>
+
+            <!-- Login Button with Progress Indicator -->
+            <StackPane>
+                <Button fx:id="loginButton" text="Sign In" maxWidth="Infinity"
+                        onAction="#handleLogin"
+                        style="-fx-background-color: #667eea; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 12; -fx-background-radius: 10; -fx-cursor: hand;"/>
+                <ProgressIndicator fx:id="loadingIndicator" visible="false" 
+                                 maxWidth="30" maxHeight="30"/>
+            </StackPane>
+
+            <!-- Sign Up Link -->
+            <HBox alignment="CENTER" spacing="5">
+                <Label text="Don't have an account?" style="-fx-text-fill: #718096;"/>
+                <Button fx:id="signupButton" text="Sign Up" 
+                        onAction="#handleSignup"
+                        style="-fx-background-color: transparent; -fx-text-fill: #667eea; -fx-font-weight: bold; -fx-cursor: hand; -fx-underline: true;"/>
+            </HBox>
+        </VBox>
+
+        <!-- Footer -->
+        <VBox alignment="CENTER" spacing="5">
+            <Separator/>
+            <Label text="© 2024 Task Manager. All rights reserved." 
+                   style="-fx-font-size: 12px; -fx-text-fill: #a0aec0;"/>
+        </VBox>
+    </VBox>
+
+    </AnchorPane>
+</ScrollPane>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.controllers.TasksController"
+      spacing="20"
+      style="-fx-padding:30; -fx-background-color:#f5f7fb;">
+
+    <!-- Header -->
+    <HBox spacing="10">
+        <Label text="Task Management"
+               style="-fx-font-size:22px; -fx-font-weight:bold;"/>
+
+        <Pane HBox.hgrow="ALWAYS"/>
+
+        <Button text="+ New Task"
+                onAction="#openAddTaskDialog"
+                style="-fx-background-color:#6366f1; -fx-text-fill:white;"/>
+    </HBox>
+
+    <!-- Task Table -->
+    <TableView fx:id="taskTable" prefHeight="500">
+
+        <columns>
+
+            <TableColumn fx:id="taskNameCol"
+                         text="Task"
+                         prefWidth="220"/>
+
+            <TableColumn fx:id="assignedCol"
+                         text="Assigned To"
+                         prefWidth="150"/>
+
+            <TableColumn fx:id="priorityCol"
+                         text="Priority"
+                         prefWidth="120"/>
+
+            <TableColumn fx:id="statusCol"
+                         text="Status"
+                         prefWidth="140"/>
+
+            <TableColumn fx:id="deadlineCol"
+                         text="Deadline"
+                         prefWidth="160"/>
+
+        </columns>
+
+    </TableView>
+
+</VBox>

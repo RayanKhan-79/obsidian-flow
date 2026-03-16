@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.controllers.AddTaskController"
+      spacing="15"
+      alignment="CENTER"
+      style="-fx-padding:30;">
+
+    <Label text="Create New Task"
+           style="-fx-font-size:20px; -fx-font-weight:bold;"/>
+
+    <TextField fx:id="taskNameField"
+               promptText="Task Name"
+               prefWidth="250"/>
+
+    <ComboBox fx:id="assignedBox"
+              promptText="Assign to Team Member"
+              prefWidth="250"/>
+
+    <ComboBox fx:id="priorityBox"
+              promptText="Priority"
+              prefWidth="250"/>
+
+    <ComboBox fx:id="statusBox"
+              promptText="Status"
+              prefWidth="250"/>
+
+    <DatePicker fx:id="deadlinePicker"
+                prefWidth="250"/>
+
+    <Button text="Add Task"
+            onAction="#addTask"
+            style="-fx-background-color:#22c55e; -fx-text-fill:white;"/>
+
+</VBox>
