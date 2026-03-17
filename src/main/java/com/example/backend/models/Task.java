@@ -25,12 +25,12 @@ public class Task
         {
             Id = rs.getLong(Constants.ID);
             project_id = rs.getLong(Constants.PROJECT_ID);
-            title = rs.getString(Constants.Title);
-            description = rs.getString(Constants.Description);
-            status = Enum.valueOf(TaskStatus.class, rs.getString(Constants.Status));
-            priority = rs.getLong(Constants.Priority);
-            dueDate = LocalDateTime.parse(rs.getString(Constants.Due_Date));
-            createdDate = LocalDateTime.parse(rs.getString(Constants.Created_Date));            
+            title = rs.getString(Constants.TITLE);
+            description = rs.getString(Constants.DESCRIPTION);
+            status = Enum.valueOf(TaskStatus.class, rs.getString(Constants.STATUS));
+            priority = rs.getLong(Constants.PRIORITY);
+            dueDate = LocalDateTime.parse(rs.getString(Constants.DUE_DATE));
+            createdDate = LocalDateTime.parse(rs.getString(Constants.CREATED_DATE));            
 
         } catch (SQLException e) {
             System.out.println("Task Parsing Error");

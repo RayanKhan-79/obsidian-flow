@@ -21,7 +21,7 @@ public class User
             fname = rs.getString(Constants.FIRST_NAME);
             lname = rs.getString(Constants.LAST_NAME);
             email = rs.getString(Constants.EMAIL);
-            password = rs.getString(Constants.Password);
+            password = rs.getString(Constants.PASSWORD);
 
         } catch (SQLException e) {
             System.out.println("User Parsing Error");
