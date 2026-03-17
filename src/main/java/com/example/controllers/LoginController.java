@@ -26,13 +26,18 @@ public class LoginController {
 
     @FXML
     public void initialize() {
-        // Load logo (comment out if no logo yet)
+        // Load logo
         try {
-            Image logo = new Image(getClass().getResourceAsStream("src\\main\\resources\\com\\example\\images\\logo.jpeg"));
-            logoImage.setImage(logo);
+            // Fix the logo path
+            Image logo = new Image(getClass().getResourceAsStream("/com/example/images/logo.jpeg"));
+            if (logo != null) {
+                logoImage.setImage(logo);
+            } else {
+                logoImage.setVisible(false);
+            }
         } catch (Exception e) {
-            System.out.println("Logo not found, continuing without logo");
-            logoImage.setVisible(false); // Hide if no logo
+            System.out.println("Logo not found, continuing without logo: " + e.getMessage());
+            logoImage.setVisible(false);
         }
 
         // Add enter key handler
@@ -49,8 +54,12 @@ public class LoginController {
         );
 
         // Add demo credentials hint
-        usernameField.setPromptText("Username (try 'demo')");
+        usernameField.setPromptText("Username (try 'sarah' for manager, 'john' for member)");
         passwordField.setPromptText("Password (try 'password123')");
+        
+        // Hide error label initially
+        errorLabel.setVisible(false);
+        loadingIndicator.setVisible(false);
     }
 
     @FXML
@@ -68,7 +77,7 @@ public class LoginController {
         loadingIndicator.setVisible(true);
         loginButton.setDisable(true);
 
-        // Simulate network delay with a simple animation
+        // Simulate network delay
         javafx.animation.PauseTransition pause = new javafx.animation.PauseTransition(
             javafx.util.Duration.seconds(0.5)
         );
@@ -84,7 +93,10 @@ public class LoginController {
                 SessionManager.setCurrentUser(user);
                 navigateToDashboard();
             } else {
-                showError("Invalid username or password. Try 'demo' / 'password123'");
+                showError("Invalid username or password. Try:\n" +
+                         "Manager: sarah / password123\n" +
+                         "Member: john / password123\n" +
+                         "Admin: admin / admin123");
             }
         });
         pause.play();
@@ -98,7 +110,6 @@ public class LoginController {
             
             Stage stage = (Stage) signupButton.getScene().getWindow();
             
-            // Add fade transition
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.setTitle("Task Manager - Sign Up");
@@ -116,39 +127,90 @@ public class LoginController {
             ft.play();
             
         } catch (Exception e) {
+            e.printStackTrace();
             showError("Could not load signup page: " + e.getMessage());
         }
     }
 
-   private void navigateToDashboard() {
-    try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/fxml/dashboard.fxml"));
+    private void navigateToDashboard() {
+        try {
+            // Get current user from SessionManager, not from local variable
+            User currentUser = SessionManager.getCurrentUser();
+            
+            if (currentUser == null) {
+                showError("User session not found");
+                return;
+            }
+            
+            System.out.println("📂 Loading dashboard for: " + currentUser.getFullName() + 
+                             " (" + currentUser.getRole() + ")");
+            
+            String fxmlFile;
+            String title;
+            
+            // Choose dashboard based on user role
+            switch(currentUser.getRole()) {
+                case "Admin":
+                case "Project Manager":
+                    fxmlFile = "/com/example/fxml/dashboard.fxml"; // Full dashboard
+                    title = "Task Manager - Dashboard";
+                    break;
+                case "Member":
+                    fxmlFile = "/com/example/fxml/MemberDashboard.fxml"; // Member dashboard
+                    title = "My Tasks - Member Dashboard";
+                    break;
+                case "Viewer":
+                    fxmlFile = "/com/example/fxml/ViewerDashboard.fxml"; // Read-only dashboard
+                    title = "Task Manager - Viewer";
+                    break;
+                default:
+                    fxmlFile = "/com/example/fxml/MemberDashboard.fxml";
+                    title = "Dashboard";
+            }
+            
+            System.out.println("  Looking for: " + fxmlFile);
+            
+            // Try multiple paths
+            String[] possiblePaths = {
+                fxmlFile,
+                fxmlFile.replace("/com/example/fxml/", "/fxml/"),
+                "/fxml/" + fxmlFile.substring(fxmlFile.lastIndexOf("/") + 1)
+            };
+            
+            java.net.URL fxmlUrl = null;
+            for (String path : possiblePaths) {
+                fxmlUrl = getClass().getResource(path);
+                if (fxmlUrl != null) {
+                    System.out.println("✅ Found at: " + path);
+                    break;
+                }
+            }
+            
+            if (fxmlUrl == null) {
+                System.err.println("❌ Could not find dashboard file!");
+                showError("Could not load dashboard");
+                return;
+            }
+            
+            FXMLLoader loader = new FXMLLoader(fxmlUrl);
             Parent root = loader.load();
             
-            Stage stage = (Stage) signupButton.getScene().getWindow();
-            
-            // Add fade transition
+            Stage stage = (Stage) loginButton.getScene().getWindow();
             Scene scene = new Scene(root);
             stage.setScene(scene);
-            stage.setTitle("Task Manager - Sign Up");
-            stage.setMinWidth(1000);
-            stage.setMinHeight(600);
-            stage.setResizable(true);
+            stage.setTitle(title);
             stage.centerOnScreen();
+            stage.show();
             
-            // Fade in animation
-            root.setOpacity(0);
-            javafx.animation.FadeTransition ft = new javafx.animation.FadeTransition(
-                javafx.util.Duration.millis(300), root);
-            ft.setFromValue(0);
-            ft.setToValue(1);
-            ft.play();
+            System.out.println("✅ Dashboard loaded successfully");
             
         } catch (Exception e) {
-            showError("Could not load dashboard page: " + e.getMessage());
+            System.err.println("❌ Error loading dashboard: " + e.getMessage());
+            e.printStackTrace();
+            showError("Error loading dashboard: " + e.getMessage());
         }
-}
-
+    }
+    
     private void showError(String message) {
         errorLabel.setText(message);
         errorLabel.setVisible(true);
@@ -165,9 +227,16 @@ public class LoginController {
     @FXML
     private void handleForgotPassword() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Forgot Password");
+        alert.setTitle("Demo Credentials");
         alert.setHeaderText(null);
-        alert.setContentText("For demo, use:\nUsername: demo\nPassword: password123");
+        alert.setContentText(
+            "Demo Users:\n\n" +
+            "Admin: admin / admin123\n" +
+            "Project Manager: sarah / password123\n" +
+            "Member: john / password123\n" +
+            "Member: mike / password123\n" +
+            "Viewer: bob / password123"
+        );
         alert.showAndWait();
     }
 }

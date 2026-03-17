@@ -12,7 +12,7 @@
             fitToWidth="true" fitToHeight="true"
             style="-fx-background-color: linear-gradient(to bottom right, #667eea, #764ba2); -fx-background: transparent;">
 
-    <AnchorPane fx:id="rootPane" prefHeight="600" prefWidth="1000"
+    <AnchorPane fx:id="rootPane" prefHeight="600" prefWidth="1300"
                 style="-fx-background-color: linear-gradient(to bottom right, #667eea, #764ba2);">
 
         <!-- Main Content Card -->

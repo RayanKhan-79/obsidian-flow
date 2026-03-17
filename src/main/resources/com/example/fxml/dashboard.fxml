@@ -21,9 +21,12 @@
 
             <Separator/>
 
-            <!-- ADDED fx:id FOR ALL BUTTONS -->
             <Button fx:id="dashboardBtn" text="Dashboard"
                     style="-fx-background-color:#334155; -fx-text-fill:white; -fx-pref-width:180; -fx-cursor:hand;"/>
+
+            <!-- ADDED: Projects Button -->
+            <Button fx:id="projectsBtn" text="Projects"
+                    style="-fx-background-color:transparent; -fx-text-fill:white; -fx-pref-width:180; -fx-cursor:hand;"/>
 
             <Button fx:id="tasksBtn" text="Tasks"
                     style="-fx-background-color:transparent; -fx-text-fill:white; -fx-pref-width:180; -fx-cursor:hand;"/>
@@ -50,7 +53,6 @@
               spacing="20"
               style="-fx-background-color:white; -fx-padding:15;">
 
-            <!-- ADDED fx:id FOR TOP BAR COMPONENTS -->
             <Label fx:id="dashboardTitle" text="Dashboard"
                    style="-fx-font-size:20px; -fx-font-weight:bold;"/>
 
@@ -70,7 +72,7 @@
     <center>
         <VBox spacing="25" style="-fx-padding:30;">
 
-            <!-- STAT CARDS - ADDED fx:id FOR ALL STAT LABELS -->
+            <!-- STAT CARDS -->
             <HBox spacing="20">
 
                 <VBox spacing="10"
@@ -107,7 +109,7 @@
 
             </HBox>
 
-            <!-- TASK LIST - ADDED fx:id FOR TABLE AND BUTTON -->
+            <!-- TASK LIST -->
             <VBox spacing="10"
                   style="-fx-background-color:white; -fx-padding:20; -fx-background-radius:10;">
 
@@ -119,7 +121,6 @@
                             style="-fx-background-color:#6366f1; -fx-text-fill:white; -fx-cursor:hand; -fx-background-radius:5; -fx-padding:8 15;"/>
                 </HBox>
 
-                <!-- ADDED fx:id FOR TABLE AND COLUMNS -->
                 <TableView fx:id="taskTable" prefHeight="350">
                     <columns>
                         <TableColumn fx:id="taskNameColumn" text="Task Name" prefWidth="250"/>
@@ -130,6 +131,11 @@
                 </TableView>
 
             </VBox>
+
+            <!-- ADDED: Project Completion Label (might be missing) -->
+            <Label fx:id="projectCompletionLabel" text="Overall Progress: 67%" 
+                   style="-fx-font-size:14px; -fx-font-weight:bold; -fx-text-fill:#6366f1;"
+                   visible="false" managed="false"/>
 
         </VBox>
     </center>

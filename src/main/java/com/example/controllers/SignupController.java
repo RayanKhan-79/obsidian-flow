@@ -172,7 +172,7 @@ public class SignupController {
         );
         pause.setOnFinished(e -> {
             // Create new user
-            User newUser = new User(username, email, password, fullName);
+            User newUser = new User(username, email, password, fullName, confirmPassword, confirmPassword);
             boolean registered = User.registerUser(newUser);
             
             loadingIndicator.setVisible(false);

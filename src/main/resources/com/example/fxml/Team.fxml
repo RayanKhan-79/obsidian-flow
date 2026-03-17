@@ -6,7 +6,7 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.example.controllers.TasksController"
+            fx:controller="com.example.controllers.TeamController"
             style="-fx-background-color:#f5f7fb;">
 
     <!-- LEFT SIDEBAR (Same as Dashboard) -->
@@ -27,10 +27,10 @@
                     style="-fx-background-color:transparent; -fx-text-fill:white; -fx-pref-width:180; -fx-cursor:hand;"/>
 
             <Button fx:id="tasksBtn" text="Tasks"
-                    style="-fx-background-color:#334155; -fx-text-fill:white; -fx-pref-width:180; -fx-cursor:hand;"/>
+                    style="-fx-background-color:transparent; -fx-text-fill:white; -fx-pref-width:180; -fx-cursor:hand;"/>
 
             <Button fx:id="teamBtn" text="Team"
-                    style="-fx-background-color:transparent; -fx-text-fill:white; -fx-pref-width:180; -fx-cursor:hand;"/>
+                    style="-fx-background-color:#334155; -fx-text-fill:white; -fx-pref-width:180; -fx-cursor:hand;"/>
 
             <Button fx:id="reportsBtn" text="Reports"
                     style="-fx-background-color:transparent; -fx-text-fill:white; -fx-pref-width:180; -fx-cursor:hand;"/>
@@ -45,25 +45,19 @@
         </VBox>
     </left>
 
-    <!-- TOP BAR (Same as Dashboard) -->
+    <!-- TOP BAR -->
     <top>
         <HBox alignment="CENTER_LEFT"
               spacing="20"
               style="-fx-background-color:white; -fx-padding:15;">
 
-            <Label text="Task Management"
+            <Label text="Team Management"
                    style="-fx-font-size:20px; -fx-font-weight:bold;"/>
-
-            <!-- Project Filter Dropdown -->
-            <ComboBox fx:id="projectFilter" 
-                      promptText="All Projects" 
-                      prefWidth="150"
-                      style="-fx-background-color:#f1f5f9;"/>
 
             <Pane HBox.hgrow="ALWAYS"/>
 
             <TextField fx:id="searchField" 
-                       promptText="Search tasks..."
+                       promptText="Search team members..."
                        prefWidth="250"
                        style="-fx-background-radius:5; -fx-padding:8;"/>
 
@@ -79,49 +73,73 @@
     <center>
         <VBox spacing="25" style="-fx-padding:30;">
 
-            <!-- Header with New Task Button -->
+            <!-- Header with Add Member Button -->
             <HBox alignment="CENTER_RIGHT">
-                <Button fx:id="newTaskButton" 
-                        text="+ New Task" 
-                        onAction="#openAddTaskDialog"
+                <Button fx:id="addMemberButton" 
+                        text="+ Add Team Member" 
+                        onAction="#handleAddMember"
                         style="-fx-background-color:#6366f1; -fx-text-fill:white; -fx-cursor:hand; -fx-background-radius:5; -fx-padding:10 20; -fx-font-weight:bold;"/>
             </HBox>
 
-            <!-- Task Table -->
+            <!-- Team Members Table -->
             <VBox spacing="10"
                   style="-fx-background-color:white; -fx-padding:20; -fx-background-radius:10;">
 
-                <TableView fx:id="taskTable" prefHeight="450">
+                <TableView fx:id="teamTable" prefHeight="400">
                     <columns>
-                        <TableColumn fx:id="taskNameCol"
-                                     text="Task"
+                        <TableColumn fx:id="nameColumn"
+                                     text="Name"
+                                     prefWidth="200"/>
+
+                        <TableColumn fx:id="emailColumn"
+                                     text="Email"
                                      prefWidth="250"/>
 
-                        <TableColumn fx:id="assignedCol"
-                                     text="Assigned To"
+                        <TableColumn fx:id="roleColumn"
+                                     text="Role"
                                      prefWidth="150"/>
 
-                        <TableColumn fx:id="priorityCol"
-                                     text="Priority"
+                        <TableColumn fx:id="departmentColumn"
+                                     text="Department"
+                                     prefWidth="150"/>
+
+                        <TableColumn fx:id="statusColumn"
+                                     text="Status"
                                      prefWidth="120"/>
 
-                        <TableColumn fx:id="statusCol"
-                                     text="Status"
-                                     prefWidth="140"/>
-
-                        <TableColumn fx:id="deadlineCol"
-                                     text="Deadline"
-                                     prefWidth="160"/>
+                        <TableColumn fx:id="actionsColumn"
+                                     text="Actions"
+                                     prefWidth="100"/>
                     </columns>
                 </TableView>
 
             </VBox>
 
-            <!-- Status Bar -->
-            <HBox alignment="CENTER_RIGHT" spacing="10">
-                <Label fx:id="totalTasksLabel" 
-                       text="Total Tasks: 0" 
-                       style="-fx-text-fill:#64748b; -fx-font-weight:bold;"/>
+            <!-- Team Stats -->
+            <HBox spacing="20" alignment="CENTER">
+                <VBox spacing="5" alignment="CENTER"
+                      style="-fx-background-color:white; -fx-padding:15; -fx-background-radius:10;"
+                      prefWidth="150">
+                    <Label text="Total Members" style="-fx-text-fill:#64748b;"/>
+                    <Label fx:id="totalMembersLabel" text="8" 
+                           style="-fx-font-size:24px; -fx-font-weight:bold; -fx-text-fill:#6366f1;"/>
+                </VBox>
+
+                <VBox spacing="5" alignment="CENTER"
+                      style="-fx-background-color:white; -fx-padding:15; -fx-background-radius:10;"
+                      prefWidth="150">
+                    <Label text="Active" style="-fx-text-fill:#64748b;"/>
+                    <Label fx:id="activeMembersLabel" text="6" 
+                           style="-fx-font-size:24px; -fx-font-weight:bold; -fx-text-fill:#22c55e;"/>
+                </VBox>
+
+                <VBox spacing="5" alignment="CENTER"
+                      style="-fx-background-color:white; -fx-padding:15; -fx-background-radius:10;"
+                      prefWidth="150">
+                    <Label text="Admins" style="-fx-text-fill:#64748b;"/>
+                    <Label fx:id="adminCountLabel" text="2" 
+                           style="-fx-font-size:24px; -fx-font-weight:bold; -fx-text-fill:#f59e0b;"/>
+                </VBox>
             </HBox>
 
         </VBox>

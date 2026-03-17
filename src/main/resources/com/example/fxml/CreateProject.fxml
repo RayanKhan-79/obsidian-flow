@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.controllers.CreateProjectController"
+      spacing="20" style="-fx-padding:25; -fx-background-color:white;"
+      prefWidth="500" prefHeight="450">
+
+    <Label text="Create New Project" style="-fx-font-size:20px; -fx-font-weight:bold; -fx-text-fill:#1e293b;"/>
+    
+    <Separator/>
+    
+    <!-- Project Name -->
+    <VBox spacing="5">
+        <Label text="Project Name *" style="-fx-font-weight:bold; -fx-text-fill:#334155;"/>
+        <TextField fx:id="projectNameField" promptText="Enter project name"
+                   style="-fx-padding:10; -fx-background-radius:5; -fx-border-radius:5; -fx-border-color:#e2e8f0;"/>
+    </VBox>
+    
+    <!-- Description -->
+    <VBox spacing="5">
+        <Label text="Description" style="-fx-font-weight:bold; -fx-text-fill:#334155;"/>
+        <TextArea fx:id="descriptionField" promptText="Enter project description" 
+                  prefRowCount="3" wrapText="true"
+                  style="-fx-padding:10; -fx-background-radius:5; -fx-border-radius:5; -fx-border-color:#e2e8f0;"/>
+    </VBox>
+    
+    <!-- Dates -->
+    <HBox spacing="15">
+        <VBox spacing="5" HBox.hgrow="ALWAYS">
+            <Label text="Start Date" style="-fx-font-weight:bold; -fx-text-fill:#334155;"/>
+            <DatePicker fx:id="startDatePicker" promptText="Select start date" 
+                        HBox.hgrow="ALWAYS"
+                        style="-fx-padding:5; -fx-background-radius:5;"/>
+        </VBox>
+        <VBox spacing="5" HBox.hgrow="ALWAYS">
+            <Label text="End Date" style="-fx-font-weight:bold; -fx-text-fill:#334155;"/>
+            <DatePicker fx:id="endDatePicker" promptText="Select end date" 
+                        HBox.hgrow="ALWAYS"
+                        style="-fx-padding:5; -fx-background-radius:5;"/>
+        </VBox>
+    </HBox>
+    
+    <!-- Team Members Selection -->
+    <VBox spacing="5">
+        <Label text="Team Members" style="-fx-font-weight:bold; -fx-text-fill:#334155;"/>
+        <ListView fx:id="teamMembersListView" prefHeight="100">
+            <!-- Will be populated via controller -->
+        </ListView>
+    </VBox>
+    
+    <!-- Color Selection -->
+    <VBox spacing="5">
+        <Label text="Project Color" style="-fx-font-weight:bold; -fx-text-fill:#334155;"/>
+        <ComboBox fx:id="colorComboBox" prefWidth="150" promptText="Select color"
+                  style="-fx-padding:5; -fx-background-radius:5;"/>
+    </VBox>
+    
+    <Pane VBox.vgrow="ALWAYS"/>
+    
+    <!-- Buttons -->
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button fx:id="cancelButton" text="Cancel" onAction="#handleCancel"
+                style="-fx-background-color:#f1f5f9; -fx-text-fill:#334155; -fx-padding:10 25; -fx-background-radius:5; -fx-font-weight:bold; -fx-cursor:hand;"/>
+        <Button fx:id="createButton" text="Create Project" onAction="#handleCreate"
+                style="-fx-background-color:#6366f1; -fx-text-fill:white; -fx-padding:10 25; -fx-background-radius:5; -fx-font-weight:bold; -fx-cursor:hand;"/>
+    </HBox>
+    
+</VBox>

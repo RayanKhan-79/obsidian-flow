@@ -14,37 +14,44 @@ public class Main extends Application {
         try {
             System.out.println("Loading login screen...");
             
-            // Load login screen
+            // Use the correct path based on your resources folder
             FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/com/example/fxml/login.fxml")
+                getClass().getResource("/fxml/Login.fxml")  // Try this path first
             );
+            
+            // Alternative path if above doesn't work
+            if (loader.getLocation() == null) {
+                System.out.println("Trying alternative path...");
+                loader = new FXMLLoader(
+                    getClass().getResource("/com/example/fxml/Login.fxml")
+                );
+            }
             
             if (loader.getLocation() == null) {
                 System.err.println("ERROR: Could not find login.fxml");
+                System.err.println("Current working directory: " + System.getProperty("user.dir"));
+                System.err.println("Classpath: " + System.getProperty("java.class.path"));
                 return;
             }
             
             Parent root = loader.load();
             System.out.println("Login screen loaded successfully");
             
-            // Set up scene
             Scene scene = new Scene(root);
             
             // Set application icon
             try {
-                Image icon = new Image(getClass().getResourceAsStream("/com/example/images/logo.png"));
+                Image icon = new Image(getClass().getResourceAsStream("/images/logo.png"));
                 if (icon != null) {
                     primaryStage.getIcons().add(icon);
-                    System.out.println("Icon loaded successfully");
                 }
             } catch (Exception e) {
                 System.out.println("No icon found: " + e.getMessage());
             }
             
-            // Configure stage
             primaryStage.setTitle("Task Manager - Login");
             primaryStage.setScene(scene);
-            primaryStage.setMinWidth(1000);
+            primaryStage.setMinWidth(1300);
             primaryStage.setMinHeight(600);
             primaryStage.setResizable(true);
             primaryStage.centerOnScreen();
@@ -59,8 +66,6 @@ public class Main extends Application {
     }
     
     public static void main(String[] args) {
-        System.out.println("Starting Task Manager...");
-        System.out.println("Java version: " + System.getProperty("java.version"));
         launch(args);
     }
 }

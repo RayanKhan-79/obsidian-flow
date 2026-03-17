@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.controllers.NotificationsController"
+            style="-fx-background-color:#f5f7fb;">
+
+    <!-- LEFT SIDEBAR - Same as Member Dashboard -->
+    <left>
+        <VBox spacing="20"
+              prefWidth="220"
+              style="-fx-background-color:#1e293b; -fx-padding:25;">
+
+            <Label text="TaskFlow"
+                   style="-fx-text-fill:white; -fx-font-size:22px; -fx-font-weight:bold;"/>
+
+            <Separator/>
+
+            <Button fx:id="dashboardBtn" text="🏠 Dashboard"
+                    style="-fx-background-color:transparent; -fx-text-fill:white; -fx-pref-width:180; -fx-cursor:hand; -fx-padding:10;"/>
+
+            <Button fx:id="myTasksBtn" text="📋 My Tasks"
+                    style="-fx-background-color:transparent; -fx-text-fill:white; -fx-pref-width:180; -fx-cursor:hand; -fx-padding:10;"/>
+
+            <Button fx:id="myProjectsBtn" text="📁 My Projects"
+                    style="-fx-background-color:transparent; -fx-text-fill:white; -fx-pref-width:180; -fx-cursor:hand; -fx-padding:10;"/>
+
+            <Button fx:id="notificationsBtn" text="🔔 Notifications"
+                    style="-fx-background-color:#334155; -fx-text-fill:white; -fx-pref-width:180; -fx-cursor:hand; -fx-padding:10;"/>
+
+            <Button fx:id="profileBtn" text="👤 My Profile"
+                    style="-fx-background-color:transparent; -fx-text-fill:white; -fx-pref-width:180; -fx-cursor:hand; -fx-padding:10;"/>
+
+            <Pane VBox.vgrow="ALWAYS"/>
+
+            <Button fx:id="logoutBtn" text="🚪 Logout"
+                    style="-fx-background-color:#ef4444; -fx-text-fill:white; -fx-pref-width:180; -fx-cursor:hand; -fx-padding:10;"/>
+        </VBox>
+    </left>
+
+    <!-- TOP BAR -->
+    <top>
+        <VBox>
+            <!-- Header -->
+            <HBox alignment="CENTER_LEFT"
+                  spacing="20"
+                  style="-fx-background-color:white; -fx-padding:20; -fx-border-color:#e2e8f0; -fx-border-width:0 0 1 0;">
+
+                <VBox spacing="5">
+                    <Label fx:id="pageTitle" text="Notifications"
+                           style="-fx-font-size:24px; -fx-font-weight:bold; -fx-text-fill:#1e293b;"/>
+                    <Label fx:id="unreadCountLabel" text="0 unread"
+                           style="-fx-text-fill:#64748b; -fx-font-size:14px;"/>
+                </VBox>
+
+                <Pane HBox.hgrow="ALWAYS"/>
+
+                <HBox spacing="10" alignment="CENTER_RIGHT">
+                    <Label text="Filter:" style="-fx-font-weight:bold;"/>
+                    <ComboBox fx:id="filterComboBox" prefWidth="150"/>
+                    
+                    <Button fx:id="markAllReadBtn" text="✓ Mark all read"
+                            style="-fx-background-color:#f1f5f9; -fx-padding:8 15; -fx-background-radius:5; -fx-cursor:hand;"/>
+                    
+                    <Button fx:id="refreshBtn" text="↻ Refresh"
+                            style="-fx-background-color:#f1f5f9; -fx-padding:8 15; -fx-background-radius:5; -fx-cursor:hand;"/>
+                </HBox>
+            </HBox>
+
+            <!-- View Toggle - FIXED: ToggleGroup is defined as a resource, not as a child -->
+            <HBox alignment="CENTER_LEFT"
+                  spacing="20"
+                  style="-fx-background-color:white; -fx-padding:10 20; -fx-border-color:#e2e8f0; -fx-border-width:0 0 1 0;">
+                
+                <fx:define>
+                    <ToggleGroup fx:id="viewToggle"/>
+                </fx:define>
+                
+                <RadioButton fx:id="allRadio" text="All Notifications" 
+                             toggleGroup="$viewToggle" selected="true"/>
+                
+                <RadioButton fx:id="unreadRadio" text="Unread Only" 
+                             toggleGroup="$viewToggle"/>
+
+                <Pane HBox.hgrow="ALWAYS"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- MAIN CONTENT -->
+    <center>
+        <ScrollPane fitToWidth="true" style="-fx-background:transparent; -fx-background-color:transparent;">
+            <VBox spacing="15" style="-fx-padding:30;">
+                
+                <!-- Notifications List -->
+                <ListView fx:id="notificationsListView" prefHeight="600"
+                          style="-fx-background-color:transparent;">
+                    <placeholder>
+                        <VBox alignment="CENTER" spacing="10">
+                            <Label text="🔔 No notifications" 
+                                   style="-fx-font-size:18px; -fx-text-fill:#94a3b8;"/>
+                            <Label text="You're all caught up!" 
+                                   style="-fx-text-fill:#94a3b8;"/>
+                        </VBox>
+                    </placeholder>
+                </ListView>
+                
+            </VBox>
+        </ScrollPane>
+    </center>
+
+</BorderPane>
