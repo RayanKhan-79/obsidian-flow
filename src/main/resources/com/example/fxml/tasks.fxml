@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.frontend.controllers.TasksController"
+            style="-fx-background-color:#f5f7fb;">
+
+    <!-- LEFT SIDEBAR (Same as Dashboard) -->
+    <left>
+        <VBox spacing="20"
+              prefWidth="220"
+              style="-fx-background-color:#1e293b; -fx-padding:25;">
+
+            <Label text="TaskFlow"
+                   style="-fx-text-fill:white; -fx-font-size:22px; -fx-font-weight:bold;"/>
+
+            <Separator/>
+
+            <Button fx:id="dashboardBtn" text="Dashboard"
+                    style="-fx-background-color:transparent; -fx-text-fill:white; -fx-pref-width:180; -fx-cursor:hand;"/>
+
+            <Button fx:id="projectsBtn" text="Projects"
+                    style="-fx-background-color:transparent; -fx-text-fill:white; -fx-pref-width:180; -fx-cursor:hand;"/>
+
+            <Button fx:id="tasksBtn" text="Tasks"
+                    style="-fx-background-color:#334155; -fx-text-fill:white; -fx-pref-width:180; -fx-cursor:hand;"/>
+
+            <Button fx:id="teamBtn" text="Team"
+                    style="-fx-background-color:transparent; -fx-text-fill:white; -fx-pref-width:180; -fx-cursor:hand;"/>
+
+            <Button fx:id="reportsBtn" text="Reports"
+                    style="-fx-background-color:transparent; -fx-text-fill:white; -fx-pref-width:180; -fx-cursor:hand;"/>
+
+            <Button fx:id="settingsBtn" text="Settings"
+                    style="-fx-background-color:transparent; -fx-text-fill:white; -fx-pref-width:180; -fx-cursor:hand;"/>
+
+            <Pane VBox.vgrow="ALWAYS"/>
+
+            <Button fx:id="logoutBtn" text="Logout"
+                    style="-fx-background-color:#ef4444; -fx-text-fill:white; -fx-pref-width:180; -fx-cursor:hand;"/>
+        </VBox>
+    </left>
+
+    <!-- TOP BAR (Same as Dashboard) -->
+    <top>
+        <HBox alignment="CENTER_LEFT"
+              spacing="20"
+              style="-fx-background-color:white; -fx-padding:15;">
+
+            <Label text="Task Management"
+                   style="-fx-font-size:20px; -fx-font-weight:bold;"/>
+
+            <!-- Project Filter Dropdown -->
+            <ComboBox fx:id="projectFilter" 
+                      promptText="All Projects" 
+                      prefWidth="150"
+                      style="-fx-background-color:#f1f5f9;"/>
+
+            <Pane HBox.hgrow="ALWAYS"/>
+
+            <TextField fx:id="searchField" 
+                       promptText="Search tasks..."
+                       prefWidth="250"
+                       style="-fx-background-radius:5; -fx-padding:8;"/>
+
+            <Label text="🔔" 
+                   style="-fx-font-size:18px; -fx-cursor:hand;"/>
+
+            <Label text="👤 John Doe"
+                   style="-fx-font-weight:bold; -fx-cursor:hand;"/>
+        </HBox>
+    </top>
+
+    <!-- MAIN CONTENT -->
+    <center>
+        <VBox spacing="25" style="-fx-padding:30;">
+
+            <!-- Header with New Task Button -->
+            <HBox alignment="CENTER_RIGHT">
+                <Button fx:id="newTaskButton" 
+                        text="+ New Task" 
+                        onAction="#openAddTaskDialog"
+                        style="-fx-background-color:#6366f1; -fx-text-fill:white; -fx-cursor:hand; -fx-background-radius:5; -fx-padding:10 20; -fx-font-weight:bold;"/>
+            </HBox>
+
+            <!-- Task Table -->
+            <VBox spacing="10"
+                  style="-fx-background-color:white; -fx-padding:20; -fx-background-radius:10;">
+
+                <TableView fx:id="taskTable" prefHeight="450">
+                    <columns>
+                        <TableColumn fx:id="taskNameCol"
+                                     text="Task"
+                                     prefWidth="250"/>
+
+                        <TableColumn fx:id="assignedCol"
+                                     text="Assigned To"
+                                     prefWidth="150"/>
+
+                        <TableColumn fx:id="priorityCol"
+                                     text="Priority"
+                                     prefWidth="120"/>
+
+                        <TableColumn fx:id="statusCol"
+                                     text="Status"
+                                     prefWidth="140"/>
+
+                        <TableColumn fx:id="deadlineCol"
+                                     text="Deadline"
+                                     prefWidth="160"/>
+                    </columns>
+                </TableView>
+
+            </VBox>
+
+            <!-- Status Bar -->
+            <HBox alignment="CENTER_RIGHT" spacing="10">
+                <Label fx:id="totalTasksLabel" 
+                       text="Total Tasks: 0" 
+                       style="-fx-text-fill:#64748b; -fx-font-weight:bold;"/>
+            </HBox>
+
+        </VBox>
+    </center>
+
+</BorderPane>

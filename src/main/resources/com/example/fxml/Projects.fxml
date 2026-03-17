@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.frontend.controllers.ProjectsController"
+            style="-fx-background-color:#f5f7fb;">
+
+    <!-- LEFT SIDEBAR (SAME AS DASHBOARD) -->
+    <left>
+        <VBox spacing="20" prefWidth="220" style="-fx-background-color:#1e293b; -fx-padding:25;">
+            <Label text="TaskFlow" style="-fx-text-fill:white; -fx-font-size:22px; -fx-font-weight:bold;"/>
+            <Separator/>
+            <Button fx:id="dashboardBtn" text="Dashboard" style="-fx-background-color:transparent; -fx-text-fill:white; -fx-pref-width:180; -fx-cursor:hand;"/>
+            <Button fx:id="projectsBtn" text="Projects" style="-fx-background-color:#334155; -fx-text-fill:white; -fx-pref-width:180; -fx-cursor:hand;"/>
+            <Button fx:id="tasksBtn" text="Tasks" style="-fx-background-color:transparent; -fx-text-fill:white; -fx-pref-width:180; -fx-cursor:hand;"/>
+            <Button fx:id="teamBtn" text="Team" style="-fx-background-color:transparent; -fx-text-fill:white; -fx-pref-width:180; -fx-cursor:hand;"/>
+            <Button fx:id="reportsBtn" text="Reports" style="-fx-background-color:transparent; -fx-text-fill:white; -fx-pref-width:180; -fx-cursor:hand;"/>
+            <Button fx:id="settingsBtn" text="Settings" style="-fx-background-color:transparent; -fx-text-fill:white; -fx-pref-width:180; -fx-cursor:hand;"/>
+            <Pane VBox.vgrow="ALWAYS"/>
+            <Button fx:id="logoutBtn" text="Logout" style="-fx-background-color:#ef4444; -fx-text-fill:white; -fx-pref-width:180; -fx-cursor:hand;"/>
+        </VBox>
+    </left>
+
+    <!-- TOP BAR -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="20" style="-fx-background-color:white; -fx-padding:15;">
+            <Label text="Projects" style="-fx-font-size:20px; -fx-font-weight:bold;"/>
+            <Pane HBox.hgrow="ALWAYS"/>
+            <TextField fx:id="searchField" promptText="Search projects..." prefWidth="250"/>
+            <Label text="🔔" style="-fx-font-size:18px; -fx-cursor:hand;"/>
+            <Label text="👤 John Doe" style="-fx-font-weight:bold; -fx-cursor:hand;"/>
+        </HBox>
+    </top>
+
+    <!-- MAIN CONTENT -->
+    <center>
+        <VBox spacing="25" style="-fx-padding:30;">
+            
+            <!-- Header with New Project Button (US-1) -->
+            <HBox alignment="CENTER_LEFT">
+                <Button fx:id="newProjectButton" text="+ New Project" onAction="#handleNewProject"
+                        style="-fx-background-color:#6366f1; -fx-text-fill:white; -fx-cursor:hand; -fx-background-radius:5; -fx-padding:10 20; -fx-font-weight:bold;"/>
+                <Pane HBox.hgrow="ALWAYS"/>
+                <Label fx:id="totalProjectsLabel" text="Total Projects: 3" style="-fx-font-weight:bold;"/>
+            </HBox>
+            
+            <!-- Projects List -->
+            <ListView fx:id="projectsListView" VBox.vgrow="ALWAYS">
+                <!-- Will be populated via controller -->
+            </ListView>
+            
+        </VBox>
+    </center>
+</BorderPane>

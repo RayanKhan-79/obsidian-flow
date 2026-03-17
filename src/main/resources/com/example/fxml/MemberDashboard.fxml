@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.frontend.controllers.MemberDashboardController"
+            style="-fx-background-color:#f5f7fb;">
+
+    <!-- LEFT SIDEBAR - Member Only Navigation -->
+    <left>
+        <VBox spacing="20"
+              prefWidth="220"
+              style="-fx-background-color:#1e293b; -fx-padding:25;">
+
+            <Label text="TaskFlow"
+                   style="-fx-text-fill:white; -fx-font-size:22px; -fx-font-weight:bold;"/>
+
+            <Separator/>
+
+            <Button fx:id="dashboardBtn" text="🏠 Dashboard"
+                    style="-fx-background-color:#334155; -fx-text-fill:white; -fx-pref-width:180; -fx-cursor:hand; -fx-padding:10; -fx-alignment:center-left;"/>
+
+            <Button fx:id="myTasksBtn" text="📋 My Tasks"
+                    style="-fx-background-color:transparent; -fx-text-fill:white; -fx-pref-width:180; -fx-cursor:hand; -fx-padding:10; -fx-alignment:center-left;"/>
+
+            <Button fx:id="myProjectsBtn" text="📁 My Projects"
+                    style="-fx-background-color:transparent; -fx-text-fill:white; -fx-pref-width:180; -fx-cursor:hand; -fx-padding:10; -fx-alignment:center-left;"/>
+
+            <Button fx:id="notificationsBtn" text="🔔 Notifications"
+                    style="-fx-background-color:transparent; -fx-text-fill:white; -fx-pref-width:180; -fx-cursor:hand; -fx-padding:10; -fx-alignment:center-left;"/>
+
+            <Button fx:id="profileBtn" text="👤 My Profile"
+                    style="-fx-background-color:transparent; -fx-text-fill:white; -fx-pref-width:180; -fx-cursor:hand; -fx-padding:10; -fx-alignment:center-left;"/>
+
+            <Pane VBox.vgrow="ALWAYS"/>
+
+            <Button fx:id="logoutBtn" text="🚪 Logout"
+                    style="-fx-background-color:#ef4444; -fx-text-fill:white; -fx-pref-width:180; -fx-cursor:hand; -fx-padding:10; -fx-alignment:center-left;"/>
+        </VBox>
+    </left>
+
+    <!-- TOP BAR -->
+    <top>
+        <VBox>
+            <!-- Welcome Banner -->
+            <HBox alignment="CENTER_LEFT"
+                  spacing="20"
+                  style="-fx-background-color:linear-gradient(to right, #6366f1, #8b5cf6); -fx-padding:20;">
+
+                <VBox spacing="5">
+                    <Label fx:id="welcomeLabel" text="Hello, Member!"
+                           style="-fx-text-fill:white; -fx-font-size:24px; -fx-font-weight:bold;"/>
+                    <Label fx:id="userRoleLabel" text="Member • Team"
+                           style="-fx-text-fill:rgba(255,255,255,0.9); -fx-font-size:14px;"/>
+                </VBox>
+
+                <Pane HBox.hgrow="ALWAYS"/>
+
+                <Label fx:id="currentDateLabel" text="Monday, March 17, 2025"
+                       style="-fx-text-fill:white; -fx-font-size:14px;"/>
+            </HBox>
+
+            <!-- Search Bar -->
+            <HBox alignment="CENTER_LEFT"
+                  spacing="20"
+                  style="-fx-background-color:white; -fx-padding:15; -fx-border-color:#e2e8f0; -fx-border-width:0 0 1 0;">
+
+                <TextField fx:id="searchField" promptText="Search my tasks..."
+                           prefWidth="300"
+                           style="-fx-background-radius:20; -fx-padding:8 15; -fx-border-color:#e2e8f0; -fx-border-radius:20;"/>
+
+                <Pane HBox.hgrow="ALWAYS"/>
+
+                <Label fx:id="notificationIcon" text="🔔" 
+                       style="-fx-font-size:18px; -fx-cursor:hand; -fx-padding:5;"/>
+                <Label fx:id="userProfileLabel" text="👤 John Doe"
+                       style="-fx-font-weight:bold; -fx-cursor:hand; -fx-padding:5;"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- MAIN CONTENT -->
+    <center>
+        <ScrollPane fitToWidth="true" style="-fx-background:transparent; -fx-background-color:transparent;">
+            <VBox spacing="25" style="-fx-padding:30;">
+
+                <!-- Stats Cards - Personal Stats -->
+                <HBox spacing="20">
+                    <VBox spacing="10"
+                          style="-fx-background-color:white; -fx-padding:20; -fx-background-radius:10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 5, 0, 0, 2);"
+                          prefWidth="180">
+                        <Label text="My Tasks" style="-fx-text-fill:#64748b; -fx-font-size:14px;"/>
+                        <Label fx:id="myTasksCount" text="12"
+                               style="-fx-font-size:32px; -fx-font-weight:bold; -fx-text-fill:#6366f1;"/>
+                    </VBox>
+
+                    <VBox spacing="10"
+                          style="-fx-background-color:white; -fx-padding:20; -fx-background-radius:10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 5, 0, 0, 2);"
+                          prefWidth="180">
+                        <Label text="Completed" style="-fx-text-fill:#64748b; -fx-font-size:14px;"/>
+                        <Label fx:id="completedTasksCount" text="5"
+                               style="-fx-font-size:32px; -fx-font-weight:bold; -fx-text-fill:#22c55e;"/>
+                    </VBox>
+
+                    <VBox spacing="10"
+                          style="-fx-background-color:white; -fx-padding:20; -fx-background-radius:10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 5, 0, 0, 2);"
+                          prefWidth="180">
+                        <Label text="Pending" style="-fx-text-fill:#64748b; -fx-font-size:14px;"/>
+                        <Label fx:id="pendingTasksCount" text="5"
+                               style="-fx-font-size:32px; -fx-font-weight:bold; -fx-text-fill:#f59e0b;"/>
+                    </VBox>
+
+                    <VBox spacing="10"
+                          style="-fx-background-color:white; -fx-padding:20; -fx-background-radius:10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 5, 0, 0, 2);"
+                          prefWidth="180">
+                        <Label text="Overdue" style="-fx-text-fill:#64748b; -fx-font-size:14px;"/>
+                        <Label fx:id="overdueTasksCount" text="2"
+                               style="-fx-font-size:32px; -fx-font-weight:bold; -fx-text-fill:#ef4444;"/>
+                    </VBox>
+                </HBox>
+
+                <!-- Two Column Layout -->
+                <HBox spacing="20">
+                    <!-- Left Column - My Tasks (Main Focus) -->
+                    <VBox spacing="15" HBox.hgrow="ALWAYS">
+                        <HBox alignment="CENTER_LEFT" spacing="10">
+                            <Label text="📋 My Assigned Tasks" 
+                                   style="-fx-font-size:18px; -fx-font-weight:bold; -fx-text-fill:#1e293b;"/>
+                            <Pane HBox.hgrow="ALWAYS"/>
+                            <Label text="Click 👁️ to view details" 
+                                   style="-fx-text-fill:#94a3b8; -fx-font-size:11px; -fx-font-style:italic;"/>
+                        </HBox>
+
+                        <TableView fx:id="myTasksTable" prefHeight="300"
+                                  style="-fx-background-color:white; -fx-border-color:#e2e8f0; -fx-border-radius:5;">
+                            <columns>
+                                <TableColumn fx:id="taskNameColumn" text="Task" prefWidth="200"/>
+                                <TableColumn fx:id="projectColumn" text="Project" prefWidth="120"/>
+                                <TableColumn fx:id="priorityColumn" text="Priority" prefWidth="100"/>
+                                <TableColumn fx:id="statusColumn" text="Status" prefWidth="100"/>
+                                <TableColumn fx:id="dueDateColumn" text="Due Date" prefWidth="100"/>
+                                <TableColumn fx:id="actionsColumn" text="Actions" prefWidth="100"/>
+                            </columns>
+                            <placeholder>
+                                <VBox alignment="CENTER" spacing="10">
+                                    <Label text="📭 No tasks assigned to you" 
+                                           style="-fx-font-size:14px; -fx-text-fill:#94a3b8;"/>
+                                </VBox>
+                            </placeholder>
+                        </TableView>
+                        
+                        <!-- Quick Task Actions -->
+                        <HBox spacing="10" alignment="CENTER_RIGHT">
+                            <Button text="✓ Update Selected Status" 
+                                    style="-fx-background-color:#f59e0b; -fx-text-fill:white; -fx-padding:8 15; -fx-background-radius:5; -fx-cursor:hand; -fx-font-weight:bold;"
+                                    onAction="#focusOnMyTasks"/>
+                            <Button text="💬 Comment on Selected" 
+                                    style="-fx-background-color:#10b981; -fx-text-fill:white; -fx-padding:8 15; -fx-background-radius:5; -fx-cursor:hand; -fx-font-weight:bold;"
+                                    onAction="#showCommentOnSelectedTask"/>
+                        </HBox>
+                    </VBox>
+
+                    <!-- Right Column - Member Info -->
+                    <VBox spacing="15" prefWidth="320">
+                        
+                        <!-- My Projects (Read-only) -->
+                        <VBox spacing="10" style="-fx-background-color:white; -fx-padding:15; -fx-background-radius:10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 5, 0, 0, 2);">
+                            <Label text="📁 My Projects" style="-fx-font-size:16px; -fx-font-weight:bold; -fx-text-fill:#1e293b;"/>
+                            <ListView fx:id="myProjectsList" prefHeight="120"
+                                      style="-fx-background-color:transparent; -fx-border-color:#e2e8f0; -fx-border-radius:5;">
+                                <placeholder>
+                                    <Label text="Not part of any projects" style="-fx-text-fill:#94a3b8;"/>
+                                </placeholder>
+                            </ListView>
+                            <Label text="Double-click to view details (read-only)" 
+                                   style="-fx-text-fill:#94a3b8; -fx-font-size:11px; -fx-font-style:italic;"/>
+                        </VBox>
+
+                        <!-- Mentions & Comments -->
+                        <VBox spacing="10" style="-fx-background-color:white; -fx-padding:15; -fx-background-radius:10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 5, 0, 0, 2);">
+                            <Label text="💬 Recent Activity" style="-fx-font-size:16px; -fx-font-weight:bold; -fx-text-fill:#1e293b;"/>
+                            <ListView fx:id="mentionsListView" prefHeight="150"
+                                      style="-fx-background-color:transparent; -fx-border-color:#e2e8f0; -fx-border-radius:5;">
+                                <placeholder>
+                                    <VBox alignment="CENTER" spacing="5">
+                                        <Label text="No recent activity" style="-fx-text-fill:#94a3b8;"/>
+                                    </VBox>
+                                </placeholder>
+                            </ListView>
+                        </VBox>
+
+                        <!-- Profile Summary -->
+                        <TitledPane fx:id="profilePane" text="👤 My Profile" expanded="false"
+                                   style="-fx-background-color:white; -fx-border-color:#e2e8f0; -fx-border-radius:5;">
+                            <VBox spacing="10" style="-fx-padding:15;">
+                                <GridPane hgap="10" vgap="8">
+                                    <Label text="Name:" style="-fx-font-weight:bold; -fx-text-fill:#334155;" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                                    <Label fx:id="memberNameLabel" text="John Doe" GridPane.rowIndex="0" GridPane.columnIndex="1" style="-fx-text-fill:#1e293b;"/>
+                                    
+                                    <Label text="Email:" style="-fx-font-weight:bold; -fx-text-fill:#334155;" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                                    <Label fx:id="memberEmailLabel" text="john@example.com" GridPane.rowIndex="1" GridPane.columnIndex="1" style="-fx-text-fill:#1e293b;"/>
+                                    
+                                    <Label text="Department:" style="-fx-font-weight:bold; -fx-text-fill:#334155;" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                                    <Label fx:id="memberDepartmentLabel" text="Engineering" GridPane.rowIndex="2" GridPane.columnIndex="1" style="-fx-text-fill:#1e293b;"/>
+                                    
+                                    <Label text="Member since:" style="-fx-font-weight:bold; -fx-text-fill:#334155;" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                                    <Label fx:id="memberSinceLabel" text="March 2025" GridPane.rowIndex="3" GridPane.columnIndex="1" style="-fx-text-fill:#1e293b;"/>
+                                </GridPane>
+                                
+                                <Button fx:id="editProfileBtn" text="✏️ Edit Profile" 
+                                        style="-fx-background-color:#6366f1; -fx-text-fill:white; -fx-padding:8 15; -fx-background-radius:5; -fx-cursor:hand; -fx-font-weight:bold;"
+                                        maxWidth="Infinity"/>
+                            </VBox>
+                        </TitledPane>
+                        
+                    </VBox>
+                </HBox>
+
+            </VBox>
+        </ScrollPane>
+    </center>
+
+</BorderPane>

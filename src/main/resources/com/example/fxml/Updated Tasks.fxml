@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.frontend.controllers.TasksController"
+            style="-fx-background-color:#f5f7fb;">
+
+    <!-- LEFT SIDEBAR (SAME AS DASHBOARD) -->
+    <left>
+        <VBox spacing="20" prefWidth="220" style="-fx-background-color:#1e293b; -fx-padding:25;">
+            <Label text="TaskFlow" style="-fx-text-fill:white; -fx-font-size:22px; -fx-font-weight:bold;"/>
+            <Separator/>
+            <Button fx:id="dashboardBtn" text="Dashboard" style="-fx-background-color:transparent; -fx-text-fill:white; -fx-pref-width:180;"/>
+            <Button fx:id="projectsBtn" text="Projects" style="-fx-background-color:transparent; -fx-text-fill:white; -fx-pref-width:180;"/>
+            <Button fx:id="tasksBtn" text="Tasks" style="-fx-background-color:#334155; -fx-text-fill:white; -fx-pref-width:180;"/>
+            <Button fx:id="teamBtn" text="Team" style="-fx-background-color:transparent; -fx-text-fill:white; -fx-pref-width:180;"/>
+            <Button fx:id="reportsBtn" text="Reports" style="-fx-background-color:transparent; -fx-text-fill:white; -fx-pref-width:180;"/>
+            <Button fx:id="settingsBtn" text="Settings" style="-fx-background-color:transparent; -fx-text-fill:white; -fx-pref-width:180;"/>
+            <Pane VBox.vgrow="ALWAYS"/>
+            <Button fx:id="logoutBtn" text="Logout" style="-fx-background-color:#ef4444; -fx-text-fill:white; -fx-pref-width:180;"/>
+        </VBox>
+    </left>
+
+    <!-- TOP BAR -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="20" style="-fx-background-color:white; -fx-padding:15;">
+            <Label text="Tasks" style="-fx-font-size:20px; -fx-font-weight:bold;"/>
+            
+            <!-- Project Filter (US-3.4) -->
+            <ComboBox fx:id="projectFilter" promptText="All Projects" prefWidth="150"/>
+            
+            <Pane HBox.hgrow="ALWAYS"/>
+            <TextField fx:id="searchField" promptText="Search tasks..." prefWidth="250"/>
+            <Label text="🔔" style="-fx-font-size:18px;"/>
+            <Label text="👤 John Doe" style="-fx-font-weight:bold;"/>
+        </HBox>
+    </top>
+
+    <!-- MAIN CONTENT -->
+    <center>
+        <VBox spacing="25" style="-fx-padding:30;">
+            
+            <!-- New Task Button -->
+            <HBox alignment="CENTER_RIGHT">
+                <Button fx:id="newTaskButton" text="+ New Task" onAction="#handleNewTask"
+                        style="-fx-background-color:#6366f1; -fx-text-fill:white; -fx-cursor:hand; -fx-background-radius:5; -fx-padding:10 20;"/>
+            </HBox>
+            
+            <!-- Tasks Table with Project Column (US-3.3) -->
+            <TableView fx:id="tasksTable" VBox.vgrow="ALWAYS" prefHeight="500">
+                <columns>
+                    <TableColumn fx:id="taskNameColumn" text="Task Name" prefWidth="200"/>
+                    <TableColumn fx:id="projectColumn" text="Project" prefWidth="150"/>  <!-- NEW -->
+                    <TableColumn fx:id="assignedToColumn" text="Assigned To" prefWidth="150"/>
+                    <TableColumn fx:id="priorityColumn" text="Priority" prefWidth="100"/>
+                    <TableColumn fx:id="statusColumn" text="Status" prefWidth="100"/>
+                    <TableColumn fx:id="dueDateColumn" text="Due Date" prefWidth="120"/>
+                    <TableColumn fx:id="actionsColumn" text="Actions" prefWidth="100"/>
+                </columns>
+            </TableView>
+            
+        </VBox>
+    </center>
+</BorderPane>

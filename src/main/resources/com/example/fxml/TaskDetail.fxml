@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.frontend.controllers.TaskDetailController"
+            style="-fx-background-color:#f5f7fb;">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="20" 
+              style="-fx-background-color:white; -fx-padding:15; -fx-border-color:#e2e8f0; -fx-border-width:0 0 1 0;">
+            
+            <Button fx:id="backButton" text="← Back"/>
+            <Label text="Task Details"/>
+            <Pane HBox.hgrow="ALWAYS"/>
+            <Button fx:id="refreshButton" text="↻ Refresh"/>
+        </HBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true">
+            <VBox spacing="20" style="-fx-padding:30;">
+
+                <HBox spacing="10">
+                    <Label text="Project:"/>
+                    <Label fx:id="taskProjectLabel"/>
+                </HBox>
+
+                <Label fx:id="taskTitleLabel"/>
+
+                <GridPane hgap="20" vgap="10">
+                    <ComboBox fx:id="statusComboBox"/>
+                    <ComboBox fx:id="priorityComboBox"/>
+                </GridPane>
+
+                <TextArea fx:id="descriptionArea"/>
+
+                <ListView fx:id="commentsListView"/>
+            </VBox>
+        </ScrollPane>
+    </center>
+
+</BorderPane>
