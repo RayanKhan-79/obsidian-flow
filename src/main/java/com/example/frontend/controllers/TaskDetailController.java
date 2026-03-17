@@ -1,21 +1,16 @@
-package com.example.controllers;
+package com.example.frontend.controllers;
 
-import com.example.models.Task;
-import com.example.models.Comment;
-import com.example.models.User;
-import com.example.utils.SessionManager;
+import com.example.frontend.models.Task;
+import com.example.frontend.models.Comment;
+import com.example.frontend.models.User;
+import com.example.frontend.utils.SessionManager;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;

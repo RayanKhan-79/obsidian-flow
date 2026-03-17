@@ -1,4 +1,4 @@
-package com.example.models;
+package com.example.frontend.models;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

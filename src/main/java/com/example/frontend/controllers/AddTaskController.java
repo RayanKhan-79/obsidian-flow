@@ -1,11 +1,12 @@
-package com.example.controllers;
+package com.example.frontend.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import java.time.LocalDate;
 
-import com.example.models.Task;
+import com.example.frontend.models.Task;
+
 
 public class AddTaskController {
 

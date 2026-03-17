@@ -8,7 +8,7 @@
 
 <ScrollPane xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.example.controllers.SignupController"
+            fx:controller="com.example.frontend.controllers.SignupController"
             fitToWidth="true" fitToHeight="true"
             style="-fx-background-color: linear-gradient(to bottom right, #667eea, #764ba2); -fx-background: transparent;">
 

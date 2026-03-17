@@ -1,10 +1,11 @@
-package com.example.utils;
+package com.example.frontend.utils;
 
-import com.example.models.User;
-import com.example.models.Project;
-import com.example.models.Task;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.example.frontend.models.Project;
+import com.example.frontend.models.Task;
+import com.example.frontend.models.User;
 
 public class SessionManager {
     private static User currentUser;

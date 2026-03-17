@@ -6,7 +6,7 @@
 
 <VBox xmlns="http://javafx.com/javafx/17"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.example.controllers.CreateProjectController"
+      fx:controller="com.example.frontend.controllers.CreateProjectController"
       spacing="20" style="-fx-padding:25; -fx-background-color:white;"
       prefWidth="500" prefHeight="450">
 

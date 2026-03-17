@@ -6,7 +6,7 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.example.controllers.ProjectsController"
+            fx:controller="com.example.frontend.controllers.ProjectsController"
             style="-fx-background-color:#f5f7fb;">
 
     <!-- LEFT SIDEBAR (SAME AS DASHBOARD) -->

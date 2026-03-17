@@ -1,9 +1,9 @@
-package com.example.controllers;
+package com.example.frontend.controllers;
 
-import com.example.models.Notification;
-import com.example.models.User;
-import com.example.models.Task;
-import com.example.utils.SessionManager;
+import com.example.frontend.models.Notification;
+import com.example.frontend.models.User;
+import com.example.frontend.models.Task;
+import com.example.frontend.utils.SessionManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

@@ -1,4 +1,4 @@
-package com.example.controllers;
+package com.example.frontend.controllers;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import com.example.models.Task;
+import com.example.frontend.models.Task;
 
 public class DashboardController {
 

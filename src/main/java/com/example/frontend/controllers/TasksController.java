@@ -1,4 +1,4 @@
-package com.example.controllers;
+package com.example.frontend.controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import javafx.beans.property.SimpleStringProperty;
 
-import com.example.models.Task;
+import com.example.frontend.models.Task;
 
 public class TasksController {
 

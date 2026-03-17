@@ -6,7 +6,7 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.example.controllers.NotificationsController"
+            fx:controller="com.example.frontend.controllers.NotificationsController"
             style="-fx-background-color:#f5f7fb;">
 
     <!-- LEFT SIDEBAR - Same as Member Dashboard -->
