@@ -28,3 +28,5 @@ poms/
 .settings
 *.vmoptions
 *.launch
+
+obsidian-flow.db
