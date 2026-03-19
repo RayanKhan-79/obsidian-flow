@@ -1,4 +1,4 @@
-package com.example.backend.services.database;
+package com.example.backend.database;
 
 public class Constants 
 {

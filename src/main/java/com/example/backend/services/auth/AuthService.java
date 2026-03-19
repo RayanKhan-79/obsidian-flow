@@ -2,12 +2,12 @@ package com.example.backend.services.auth;
 
 import java.util.Optional;
 
+import com.example.backend.database.Database;
 import com.example.backend.enums.UserTypes;
 import com.example.backend.models.User;
 import com.example.backend.repositories.ProjectManagerRepo;
 import com.example.backend.repositories.ProjectMemberRepo;
 import com.example.backend.repositories.UserRepo;
-import com.example.backend.services.database.DBService;
 
 public class AuthService 
 {
@@ -29,9 +29,9 @@ public class AuthService
 
 
     private AuthService() {
-        userRepo = new UserRepo(DBService.GetInstance());
-        projectManagerRepo = new ProjectManagerRepo(DBService.GetInstance());
-        ProjectMemberRepo = new ProjectMemberRepo(DBService.GetInstance());
+        userRepo = new UserRepo(Database.GetInstance());
+        projectManagerRepo = new ProjectManagerRepo(Database.GetInstance());
+        ProjectMemberRepo = new ProjectMemberRepo(Database.GetInstance());
     }
 
 

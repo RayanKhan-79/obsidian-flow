@@ -2,12 +2,12 @@ package com.example.backend.repositories;
 
 import java.time.LocalDateTime;
 
+import com.example.backend.database.Database;
 import com.example.backend.models.Project;
-import com.example.backend.services.database.DBService;
 
 public class ProjectRepo extends RepositoryBase<Project> 
 {
-    public ProjectRepo(String tableName, DBService dbService) 
+    public ProjectRepo(String tableName, Database dbService) 
     {
         super("Projects", dbService, Project.class);
     }

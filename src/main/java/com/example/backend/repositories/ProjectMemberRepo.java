@@ -1,12 +1,12 @@
 package com.example.backend.repositories;
 
+import com.example.backend.database.Database;
 import com.example.backend.models.ProjectMember;
-import com.example.backend.services.database.DBService;
 
 public class ProjectMemberRepo extends RepositoryBase<ProjectMember> 
 {
 
-    public ProjectMemberRepo(DBService dbService) 
+    public ProjectMemberRepo(Database dbService) 
     {
         super("Project_Members", dbService, ProjectMember.class);
     }

@@ -1,4 +1,4 @@
-package com.example.backend.services.database;
+package com.example.backend.database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -7,21 +7,21 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
 
-public class DBService 
+public class Database 
 {
     final String DB_URL = "jdbc:sqlite:obsidian-flow.db";
     final Connection connection;
-    static DBService instance;
+    static Database instance;
     
-    public static DBService GetInstance()
+    public static Database GetInstance()
     {
         if (instance == null)
-            instance = new DBService();
+            instance = new Database();
 
         return instance;
     }
 
-    private DBService()
+    private Database()
     {
         try 
         {

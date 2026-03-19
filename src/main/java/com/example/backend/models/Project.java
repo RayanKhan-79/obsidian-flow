@@ -3,7 +3,7 @@ package com.example.backend.models;
 import java.sql.ResultSet;
 import java.time.LocalDateTime;
 
-import com.example.backend.services.database.Constants;
+import com.example.backend.database.Constants;
 
 public class Project 
 {

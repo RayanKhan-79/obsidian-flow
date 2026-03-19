@@ -4,8 +4,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 
+import com.example.backend.database.Constants;
 import com.example.backend.enums.TaskStatus;
-import com.example.backend.services.database.Constants;
 
 
 public class Task 

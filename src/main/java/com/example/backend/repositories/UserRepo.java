@@ -3,13 +3,13 @@ package com.example.backend.repositories;
 import java.sql.ResultSet;
 import java.util.Optional;
 
+import com.example.backend.database.Database;
 import com.example.backend.models.User;
-import com.example.backend.services.database.DBService;
 import com.example.backend.util.Util;
 
 public class UserRepo extends RepositoryBase<User> {
 
-    public UserRepo(DBService dbService) 
+    public UserRepo(Database dbService) 
     {
         super("Users", dbService,User.class);
     }
