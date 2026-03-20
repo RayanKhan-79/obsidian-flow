@@ -1,4 +1,4 @@
-package com.example.backend.services.auth;
+package com.example.backend.services;
 
 import java.util.Optional;
 

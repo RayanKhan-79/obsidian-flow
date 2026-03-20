@@ -18,4 +18,6 @@ public class Constants
     public static final String MANAGER_ID = "manager_id";
     public static final String TASK_ID = "task_id";
     public static final String TEXT = "text";
+    public static final String PROJECT_MEMBER_ID = "project_member_id";
+    public static final String ASSIGNMENT_DATE = "assignment_date";
 }

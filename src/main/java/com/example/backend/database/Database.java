@@ -87,10 +87,10 @@ public class Database
                 title TEXT NOT NULL,
                 description TEXT,
                 priority INT,
-                status TEXT NOT NULL UNIQUE,
+                status TEXT NOT NULL,
                 due_date TEXT,
                 created_date TEXT NOT NULL
-        )
+            )
         """;
         executeUpdate(sql);
         System.out.println("Task Table Created");
@@ -119,8 +119,9 @@ public class Database
             CREATE TABLE IF NOT EXISTS Projects (
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
                 title TEXT NOT NULL,
+                description TEXT,
                 manager_id INTEGER REFERENCES Users(Id),
-                created_date TEXT NOT NULL,
+                created_date TEXT NOT NULL
             )
         """;
 

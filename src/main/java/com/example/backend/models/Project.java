@@ -9,6 +9,7 @@ public class Project
 {
     public Long Id;
     public String title;
+    public String description;
     public Long manager_id;
     public LocalDateTime createdDate;
 
@@ -18,6 +19,7 @@ public class Project
         {
             Id = rs.getLong(Constants.ID);
             title = rs.getString(Constants.TITLE);
+            description = rs.getString(Constants.DESCRIPTION);
             manager_id = rs.getLong(Constants.MANAGER_ID);
             createdDate = LocalDateTime.parse(rs.getString(Constants.CREATED_DATE));
             

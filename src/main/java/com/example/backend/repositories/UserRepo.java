@@ -17,14 +17,16 @@ public class UserRepo extends RepositoryBase<User> {
     @Override
     protected String InsertQuery() {
         return String.format(
-            "INSERT INTO %s (first_name, last_name, email, password, user_type) VALUES (?, ?, ?, ?, ?, ?)",
+            "INSERT INTO %s (first_name, last_name, email, password, user_type) VALUES (?, ?, ?, ?, ?)",
             tableName
         );
     }
     
     public Optional<User> FindByEmailAndPassword(String email, String password)
     {
-        ResultSet result =  dbService.executeQuery("SELECT * FROM %s WHERE email = ? AND password = ?", email, password);
+        ResultSet result =  dbService.executeQuery(
+            String.format("SELECT * FROM %s WHERE email = ? AND password = ?", tableName),
+            email, password);
         return Util.MapResultToModel(result, model);
     }
 }
