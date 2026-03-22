@@ -3,7 +3,6 @@ package com.example.backend.repositories;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import com.example.backend.database.Database;
 import com.example.backend.models.Project;

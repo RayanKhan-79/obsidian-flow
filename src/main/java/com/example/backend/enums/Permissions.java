@@ -1,7 +1,7 @@
 package com.example.backend.enums;
 
-public enum UserTypes 
+public enum Permissions 
 {
     PROJECT_MANAGER,
-    PROJECT_MEMBER    
+    Admin   
 }

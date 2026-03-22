@@ -12,7 +12,6 @@ public class User
     public String lname;
     public String email;
     public String password;
-    public String userType;
 
     public User(ResultSet rs)
     {
@@ -23,8 +22,7 @@ public class User
             lname = rs.getString(Constants.LAST_NAME);
             email = rs.getString(Constants.EMAIL);
             password = rs.getString(Constants.PASSWORD);
-            userType = rs.getString("user_type");
-
+            
         } catch (SQLException e) {
             System.out.println("User Parsing Error");
             System.exit(1);

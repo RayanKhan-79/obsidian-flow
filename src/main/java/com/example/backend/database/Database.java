@@ -27,10 +27,9 @@ public class Database
         {
             connection = DriverManager.getConnection(DB_URL);
             CreateUsersTable();
+            CreateUserPermissionsTable();
             CreateProjectsTable();
             CreateTasksTable();
-            CreateProjectMembersTable();
-            CreateProjectManagersTable();
             CreateProjectMembershipTable();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -46,36 +45,24 @@ public class Database
                 first_name TEXT NOT NULL,
                 last_name TEXT NOT NULL,
                 email TEXT NOT NULL UNIQUE,
-                password TEXT NOT NULL,
-                user_type TEXT NOT NULL
+                password TEXT NOT NULL
             )
         """;
         executeUpdate(sql);
         System.out.println("User Table Created");
     }
 
-    private void CreateProjectMembersTable() throws SQLException
+    private void CreateUserPermissionsTable() throws SQLException
     {
-        String sql = """ 
-            CREATE TABLE IF NOT EXISTS Project_Members (
+        String sql = """
+            CREATE TABLE IF NOT EXISTS User_Permissions (
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                user_id INTEGER REFERENCES Users(Id)
-            )
+                user_id INTEGER REFERENCES Users(Id) NOT NULL,
+                permission TEXT NOT NULL
+            )        
         """;
         executeUpdate(sql);
-        System.out.println("Member Table Created");
-    }
-
-    private void CreateProjectManagersTable() throws SQLException
-    {
-        String sql = """ 
-            CREATE TABLE IF NOT EXISTS Project_Managers (
-                Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                user_id INTEGER REFERENCES Users(Id)
-            )
-        """;
-        executeUpdate(sql);
-        System.out.println("Manager Table Created");
+        System.out.println("Permissions Table Created");
     }
 
     private void CreateTasksTable() throws SQLException  

@@ -4,11 +4,10 @@ import java.util.List;
 import java.util.Optional;
 
 import com.example.backend.database.Database;
-import com.example.backend.enums.UserTypes;
+import com.example.backend.enums.Permissions;
 import com.example.backend.models.Project;
 import com.example.backend.models.ProjectDashboard;
 import com.example.backend.models.Task;
-import com.example.backend.repositories.ProjectMemberRepo;
 import com.example.backend.repositories.ProjectRepo;
 import com.example.backend.repositories.TaskRepo;
 import com.example.backend.repositories.UserRepo;
@@ -26,14 +25,12 @@ public class ProjectService {
     private final AuthService authService;
     private final ProjectRepo projectRepo;
     private final UserRepo userRepo;
-    private final ProjectMemberRepo projectMemberRepo;
     private final TaskRepo taskRepo;
 
     private ProjectService() {
         authService = AuthService.GetInstance();
         projectRepo = new ProjectRepo("Projects", Database.GetInstance());
         userRepo = new UserRepo(Database.GetInstance());
-        projectMemberRepo = new ProjectMemberRepo(Database.GetInstance());
         taskRepo = new TaskRepo("Tasks", Database.GetInstance());
     }
 
@@ -52,7 +49,7 @@ public class ProjectService {
         if (currentUser == null || currentUser.Id == null)
             return Optional.empty();
 
-        if (!currentUser.userType.equals(UserTypes.PROJECT_MANAGER.toString()))
+        if (!userRepo.HasPermission(currentUser.Id, Permissions.PROJECT_MANAGER))
             return Optional.empty();
 
         if (title == null || title.trim().isEmpty())
@@ -70,7 +67,7 @@ public class ProjectService {
             return false;
 
         var currentUser = current.get();
-        if (!currentUser.userType.equals(UserTypes.PROJECT_MANAGER.toString()))
+        if (!userRepo.HasPermission(memberUserId, Permissions.PROJECT_MANAGER))
             return false;
 
         var projectOpt = projectRepo.Find(projectId);
@@ -81,20 +78,10 @@ public class ProjectService {
         if (!project.manager_id.equals(currentUser.Id))
             return false;
 
-        // Validate target user exists and is a member role
+        // Validate target user exists
         var targetUserOpt = userRepo.Find(memberUserId);
         if (targetUserOpt.isEmpty())
             return false;
-
-        var targetUser = targetUserOpt.get();
-        if (!targetUser.userType.equals(UserTypes.PROJECT_MEMBER.toString()))
-            return false;
-
-        // Ensure we have a Project_Members entry for this user (needed for membership list/tracking)
-        var membershipRecord = projectMemberRepo.findByUserId(memberUserId);
-        if (membershipRecord.isEmpty()) {
-            projectMemberRepo.Create(memberUserId);
-        }
 
         // Prevent duplicate assignments
         if (projectRepo.isUserMember(projectId, memberUserId))
