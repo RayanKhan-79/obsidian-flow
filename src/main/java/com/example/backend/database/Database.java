@@ -27,6 +27,7 @@ public class Database
         {
             connection = DriverManager.getConnection(DB_URL);
             CreateUsersTable();
+            CreateActivityLogTable();
             CreateUserPermissionsTable();
             CreateProjectsTable();
             CreateTasksTable();
@@ -40,8 +41,8 @@ public class Database
     private void CreateUsersTable() throws SQLException  
     {
         String sql = """ 
-            CREATE TABLE IF NOT EXISTS Users (
-                Id INTEGER PRIMARY KEY AUTOINCREMENT,
+            CREATE TABLE IF NOT EXISTS users (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
                 first_name TEXT NOT NULL,
                 last_name TEXT NOT NULL,
                 email TEXT NOT NULL UNIQUE,
@@ -52,12 +53,26 @@ public class Database
         System.out.println("User Table Created");
     }
 
+    private void CreateActivityLogTable() throws SQLException
+    {
+        String sql = """
+            CREATE TABLE IF NOT EXISTS activity_log (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER REFERENCES users(id),
+                description TEXT NOT NULL,
+                timestamp TEXT NOT NULL
+            )
+        """;
+        executeUpdate(sql);
+        System.out.println("Activity Log Table Created");
+    }
+            
     private void CreateUserPermissionsTable() throws SQLException
     {
         String sql = """
-            CREATE TABLE IF NOT EXISTS User_Permissions (
-                Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                user_id INTEGER REFERENCES Users(Id) NOT NULL,
+            CREATE TABLE IF NOT EXISTS user_permissions (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER REFERENCES users(id) NOT NULL,
                 permission TEXT NOT NULL
             )        
         """;
@@ -68,9 +83,9 @@ public class Database
     private void CreateTasksTable() throws SQLException  
     {
         String sql = """    
-            CREATE TABLE IF NOT EXISTS Tasks (
-                Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                project_id INTEGER REFERENCES Projects(Id),
+            CREATE TABLE IF NOT EXISTS tasks (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                project_id INTEGER REFERENCES projects(id),
                 title TEXT NOT NULL,
                 description TEXT,
                 priority INT,
@@ -88,10 +103,10 @@ public class Database
     private void CreateProjectMembershipTable() throws SQLException
     {
         String sql = """
-            CREATE TABLE IF NOT EXISTS Project_Memberships (
-                Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                project_member_id INTEGER REFERENCES Users(Id),
-                project_id INTEGER REFERENCES Projects(Id),
+            CREATE TABLE IF NOT EXISTS project_memberships (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                project_member_id INTEGER REFERENCES users(id),
+                project_id INTEGER REFERENCES projects(id),
                 assignment_date TEXT NOT NULL
             )
         """;
@@ -103,11 +118,11 @@ public class Database
     private void CreateProjectsTable() throws SQLException
     {
         String sql = """
-            CREATE TABLE IF NOT EXISTS Projects (
-                Id INTEGER PRIMARY KEY AUTOINCREMENT,
+            CREATE TABLE IF NOT EXISTS projects (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
                 title TEXT NOT NULL,
                 description TEXT,
-                manager_id INTEGER REFERENCES Users(Id),
+                manager_id INTEGER REFERENCES users(id),
                 created_date TEXT NOT NULL
             )
         """;

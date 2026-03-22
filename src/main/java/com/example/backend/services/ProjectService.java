@@ -29,9 +29,9 @@ public class ProjectService {
 
     private ProjectService() {
         authService = AuthService.GetInstance();
-        projectRepo = new ProjectRepo("Projects", Database.GetInstance());
+        projectRepo = new ProjectRepo(Database.GetInstance());
         userRepo = new UserRepo(Database.GetInstance());
-        taskRepo = new TaskRepo("Tasks", Database.GetInstance());
+        taskRepo = new TaskRepo(Database.GetInstance());
     }
 
     /**

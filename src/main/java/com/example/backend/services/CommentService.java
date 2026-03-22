@@ -25,7 +25,7 @@ public class CommentService {
 
     private CommentService() {
         authService = AuthService.GetInstance();
-        taskRepo = new TaskRepo("Tasks", Database.GetInstance());
+        taskRepo = new TaskRepo(Database.GetInstance());
         commentRepo = new CommentRepo(Database.GetInstance());
     }
 

@@ -40,7 +40,7 @@ public abstract class RepositoryBase<T> implements Repository<T, Long> {
         {
             
             ResultSet result = dbService.executeQuery(
-                String.format("SELECT * FROM %s WHERE Id = ?", tableName),
+                String.format("SELECT * FROM %s WHERE id = ?", tableName),
                 Id
             );
 
@@ -57,7 +57,7 @@ public abstract class RepositoryBase<T> implements Repository<T, Long> {
         try 
         {
             dbService.executeUpdate(
-                String.format("DELETE FROM %s WHERE Id = ?", tableName),
+                String.format("DELETE FROM %s WHERE id = ?", tableName),
                 Id
             );
             return true;
@@ -72,7 +72,7 @@ public abstract class RepositoryBase<T> implements Repository<T, Long> {
         try 
         {
             dbService.executeUpdate(
-                String.format("UPDATE %s SET %s WHERE Id = ?",
+                String.format("UPDATE %s SET %s WHERE id = ?",
                     tableName, 
                     dbService.GetUpdateSQL(updates)
                 ),

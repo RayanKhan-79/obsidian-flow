@@ -11,16 +11,16 @@ import com.example.backend.util.Util;
 
 public class ProjectRepo extends RepositoryBase<Project> 
 {
-    public ProjectRepo(String tableName, Database dbService) 
+    public ProjectRepo(Database dbService) 
     {
-        super("Projects", dbService, Project.class);
+        super("projects", dbService, Project.class);
     }
 
     @Override
     protected String InsertQuery() 
     {
         return String.format(
-            "INSERT INTO Projects (title, description, manager_id, created_date) VALUES (?, ?, ?, %s)",
+            "INSERT INTO projects (title, description, manager_id, created_date) VALUES (?, ?, ?, %s)",
             LocalDateTime.now().toString()
         );
     }
@@ -30,7 +30,7 @@ public class ProjectRepo extends RepositoryBase<Project>
         try 
         {
             var result = dbService.executeQuery(
-                "SELECT 1 FROM Project_Memberships WHERE project_id = ? AND project_member_id = ? LIMIT 1",
+                "SELECT 1 FROM project_memberships WHERE project_id = ? AND project_member_id = ? LIMIT 1",
                 projectId,
                 userId
             );
@@ -46,7 +46,7 @@ public class ProjectRepo extends RepositoryBase<Project>
         try 
         {
             dbService.executeUpdate(
-                "INSERT INTO Project_Memberships (project_id, project_member_id, assignment_date) VALUES (?, ?, ?)",
+                "INSERT INTO project_memberships (project_id, project_member_id, assignment_date) VALUES (?, ?, ?)",
                 projectId,
                 userId,
                 LocalDateTime.now().toString()
@@ -63,9 +63,9 @@ public class ProjectRepo extends RepositoryBase<Project>
         {
             var result = dbService.executeQuery("""
                     SELECT u.* 
-                    FROM Users u
-                    JOIN Project_Memberships pm 
-                    ON u.Id = pm.project_member_id
+                    FROM users u
+                    JOIN project_memberships pm 
+                    ON u.id = pm.project_member_id
                     WHERE pm.project_id = ?
                 """,
                 projectId

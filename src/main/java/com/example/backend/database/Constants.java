@@ -2,7 +2,7 @@ package com.example.backend.database;
 
 public class Constants 
 {
-    public static final String ID = "Id";
+    public static final String ID = "id";
     public static final String FIRST_NAME = "first_name";
     public static final String LAST_NAME = "last_name";
     public static final String EMAIL = "email";
@@ -20,4 +20,5 @@ public class Constants
     public static final String TEXT = "text";
     public static final String PROJECT_MEMBER_ID = "project_member_id";
     public static final String ASSIGNMENT_DATE = "assignment_date";
+    public static final String TIMESTAMP = "timestamp";
 }

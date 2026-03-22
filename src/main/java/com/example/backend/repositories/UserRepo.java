@@ -12,11 +12,11 @@ import com.example.backend.enums.Permissions;
 
 public class UserRepo extends RepositoryBase<User> {
 
-    private final String permissionsTableName = "User_Permissions";
+    private final String permissionsTableName = "user_permissions";
 
     public UserRepo(Database dbService) 
     {
-        super("Users", dbService, User.class);
+        super("users", dbService, User.class);
     }
 
     @Override

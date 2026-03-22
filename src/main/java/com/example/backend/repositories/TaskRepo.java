@@ -10,9 +10,9 @@ import com.example.backend.util.Util;
 
 public class TaskRepo extends RepositoryBase<Task> 
 {
-    public TaskRepo(String tableName, Database dbService) 
+    public TaskRepo(Database dbService) 
     {
-        super("Tasks", dbService, Task.class);
+        super("tasks", dbService, Task.class);
     }
 
     @Override
