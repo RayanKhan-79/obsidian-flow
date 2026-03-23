@@ -16,7 +16,7 @@
               prefWidth="220"
               style="-fx-background-color:#1e293b; -fx-padding:25;">
 
-            <Label text="TaskFlow"
+            <Label text="ObsidianFlow"
                    style="-fx-text-fill:white; -fx-font-size:22px; -fx-font-weight:bold;"/>
 
             <Separator/>
