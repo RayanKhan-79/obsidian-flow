@@ -3,16 +3,16 @@ package com.example.backend.repositories;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.example.backend.database.Constants;
+import com.example.backend.database.Database;
 import com.example.backend.models.Task;
-import com.example.backend.services.database.Constants;
-import com.example.backend.services.database.DBService;
 import com.example.backend.util.Util;
 
 public class TaskRepo extends RepositoryBase<Task> 
 {
-    public TaskRepo(String tableName, DBService dbService) 
+    public TaskRepo(Database dbService) 
     {
-        super("Tasks", dbService, Task.class);
+        super("tasks", dbService, Task.class);
     }
 
     @Override

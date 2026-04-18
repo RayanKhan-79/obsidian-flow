@@ -3,7 +3,7 @@ package com.example.backend.models;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.example.backend.services.database.Constants;
+import com.example.backend.database.Constants;
 
 public class User 
 {
@@ -22,7 +22,7 @@ public class User
             lname = rs.getString(Constants.LAST_NAME);
             email = rs.getString(Constants.EMAIL);
             password = rs.getString(Constants.PASSWORD);
-
+            
         } catch (SQLException e) {
             System.out.println("User Parsing Error");
             System.exit(1);

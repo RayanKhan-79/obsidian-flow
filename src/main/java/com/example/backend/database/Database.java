@@ -1,4 +1,4 @@
-package com.example.backend.services.database;
+package com.example.backend.database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -7,30 +7,30 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
 
-public class DBService 
+public class Database 
 {
     final String DB_URL = "jdbc:sqlite:obsidian-flow.db";
     final Connection connection;
-    static DBService instance;
+    static Database instance;
     
-    public static DBService GetInstance()
+    public static Database GetInstance()
     {
         if (instance == null)
-            instance = new DBService();
+            instance = new Database();
 
         return instance;
     }
 
-    private DBService()
+    private Database()
     {
         try 
         {
             connection = DriverManager.getConnection(DB_URL);
             CreateUsersTable();
+            CreateActivityLogTable();
+            CreateUserPermissionsTable();
             CreateProjectsTable();
             CreateTasksTable();
-            CreateProjectMembersTable();
-            CreateProjectManagersTable();
             CreateProjectMembershipTable();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -41,56 +41,58 @@ public class DBService
     private void CreateUsersTable() throws SQLException  
     {
         String sql = """ 
-            CREATE TABLE IF NOT EXISTS Users (
-                Id INTEGER PRIMARY KEY AUTOINCREMENT,
+            CREATE TABLE IF NOT EXISTS users (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
                 first_name TEXT NOT NULL,
                 last_name TEXT NOT NULL,
                 email TEXT NOT NULL UNIQUE,
-                password TEXT NOT NULL,
-                user_type TEXT NOT NULL
+                password TEXT NOT NULL
             )
         """;
         executeUpdate(sql);
         System.out.println("User Table Created");
     }
 
-    private void CreateProjectMembersTable() throws SQLException
+    private void CreateActivityLogTable() throws SQLException
     {
-        String sql = """ 
-            CREATE TABLE IF NOT EXISTS Project_Members (
-                Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                user_id INTEGER REFERENCES Users(Id)
+        String sql = """
+            CREATE TABLE IF NOT EXISTS activity_log (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER REFERENCES users(id),
+                description TEXT NOT NULL,
+                timestamp TEXT NOT NULL
             )
         """;
         executeUpdate(sql);
-        System.out.println("Member Table Created");
+        System.out.println("Activity Log Table Created");
     }
-
-    private void CreateProjectManagersTable() throws SQLException
+            
+    private void CreateUserPermissionsTable() throws SQLException
     {
-        String sql = """ 
-            CREATE TABLE IF NOT EXISTS Project_Managers (
-                Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                user_id INTEGER REFERENCES Users(Id)
-            )
+        String sql = """
+            CREATE TABLE IF NOT EXISTS user_permissions (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER REFERENCES users(id) NOT NULL,
+                permission TEXT NOT NULL
+            )        
         """;
         executeUpdate(sql);
-        System.out.println("Manager Table Created");
+        System.out.println("Permissions Table Created");
     }
 
     private void CreateTasksTable() throws SQLException  
     {
         String sql = """    
-            CREATE TABLE IF NOT EXISTS Tasks (
-                Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                project_id INTEGER REFERENCES Projects(Id),
+            CREATE TABLE IF NOT EXISTS tasks (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                project_id INTEGER REFERENCES projects(id),
                 title TEXT NOT NULL,
                 description TEXT,
                 priority INT,
-                status TEXT NOT NULL UNIQUE,
+                status TEXT NOT NULL,
                 due_date TEXT,
                 created_date TEXT NOT NULL
-        )
+            )
         """;
         executeUpdate(sql);
         System.out.println("Task Table Created");
@@ -101,10 +103,10 @@ public class DBService
     private void CreateProjectMembershipTable() throws SQLException
     {
         String sql = """
-            CREATE TABLE IF NOT EXISTS Project_Memberships (
-                Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                project_member_id INTEGER REFERENCES Users(Id),
-                project_id INTEGER REFERENCES Projects(Id),
+            CREATE TABLE IF NOT EXISTS project_memberships (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                project_member_id INTEGER REFERENCES users(id),
+                project_id INTEGER REFERENCES projects(id),
                 assignment_date TEXT NOT NULL
             )
         """;
@@ -116,11 +118,12 @@ public class DBService
     private void CreateProjectsTable() throws SQLException
     {
         String sql = """
-            CREATE TABLE IF NOT EXISTS Projects (
-                Id INTEGER PRIMARY KEY AUTOINCREMENT,
+            CREATE TABLE IF NOT EXISTS projects (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
                 title TEXT NOT NULL,
-                manager_id INTEGER REFERENCES Users(Id),
-                created_date TEXT NOT NULL,
+                description TEXT,
+                manager_id INTEGER REFERENCES users(id),
+                created_date TEXT NOT NULL
             )
         """;
 

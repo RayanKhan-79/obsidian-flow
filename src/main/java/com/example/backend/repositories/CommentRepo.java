@@ -2,14 +2,14 @@ package com.example.backend.repositories;
 
 import java.util.List;
 
+import com.example.backend.database.Constants;
+import com.example.backend.database.Database;
 import com.example.backend.models.Comment;
-import com.example.backend.services.database.Constants;
-import com.example.backend.services.database.DBService;
 import com.example.backend.util.Util;
 
 public class CommentRepo extends RepositoryBase<Comment> {
 
-    public CommentRepo(DBService dbService) 
+    public CommentRepo(Database dbService) 
     {
         super("Comments", dbService, Comment.class);
     }

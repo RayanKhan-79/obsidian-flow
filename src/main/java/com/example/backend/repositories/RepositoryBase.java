@@ -5,17 +5,17 @@ import java.sql.SQLException;
 import java.util.Map;
 import java.util.Optional;
 
+import com.example.backend.database.Database;
 import com.example.backend.interfaces.Repository;
-import com.example.backend.services.database.DBService;
 import com.example.backend.util.Util;
 
 public abstract class RepositoryBase<T> implements Repository<T, Long> {
 
     protected final String tableName;
-    protected final DBService dbService;
+    protected final Database dbService;
     protected final Class<T> model;
 
-    public RepositoryBase(String tableName, DBService dbService, Class<T> model) {
+    public RepositoryBase(String tableName, Database dbService, Class<T> model) {
         this.tableName = tableName;
         this.dbService = dbService;
         this.model = model;
@@ -40,7 +40,7 @@ public abstract class RepositoryBase<T> implements Repository<T, Long> {
         {
             
             ResultSet result = dbService.executeQuery(
-                String.format("SELECT * FROM %s WHERE Id = ?", tableName),
+                String.format("SELECT * FROM %s WHERE id = ?", tableName),
                 Id
             );
 
@@ -57,7 +57,7 @@ public abstract class RepositoryBase<T> implements Repository<T, Long> {
         try 
         {
             dbService.executeUpdate(
-                String.format("DELETE FROM %s WHERE Id = ?", tableName),
+                String.format("DELETE FROM %s WHERE id = ?", tableName),
                 Id
             );
             return true;
@@ -72,7 +72,7 @@ public abstract class RepositoryBase<T> implements Repository<T, Long> {
         try 
         {
             dbService.executeUpdate(
-                String.format("UPDATE %s SET %s WHERE Id = ?",
+                String.format("UPDATE %s SET %s WHERE id = ?",
                     tableName, 
                     dbService.GetUpdateSQL(updates)
                 ),
