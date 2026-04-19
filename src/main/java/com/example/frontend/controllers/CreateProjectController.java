@@ -9,6 +9,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.frontend.utils.DatabaseUtil;
+
 public class CreateProjectController {
 
     @FXML private TextField projectNameField;
@@ -52,14 +54,10 @@ public class CreateProjectController {
     }
     
     private void loadTeamMembers() {
-        // In real app, this would load from database
-        // For now, load sample team members
-        availableMembers.add(new TeamMember(1, "John Doe", "Engineering"));
-        availableMembers.add(new TeamMember(2, "Sarah Johnson", "Engineering"));
-        availableMembers.add(new TeamMember(3, "Mike Chen", "Design"));
-        availableMembers.add(new TeamMember(4, "Alice Brown", "Product"));
-        availableMembers.add(new TeamMember(5, "Bob Wilson", "Engineering"));
-        availableMembers.add(new TeamMember(6, "Diana Prince", "Design"));
+        availableMembers.clear();
+        DatabaseUtil.getAllUsers().forEach(user ->
+            availableMembers.add(new TeamMember(user.getId(), user.getFullName(), user.getDepartment()))
+        );
         
         // Create checkboxes for each member
         ObservableList<CheckBox> checkBoxes = FXCollections.observableArrayList();
@@ -99,9 +97,14 @@ public class CreateProjectController {
             }
         }
         
-        // Create new project
+        var created = DatabaseUtil.createProject(name, description);
+        if (created.isEmpty()) {
+            showAlert("Error", "Project could not be created. Project Manager permission is required.");
+            return;
+        }
+
         Project newProject = new Project(
-            generateProjectId(),
+            created.get().getId(),
             name,
             description,
             startDate,
@@ -109,9 +112,11 @@ public class CreateProjectController {
             color,
             selectedMembers
         );
-        
-        // Add to projects list (in real app, save to database)
         projects.add(newProject);
+
+        for (TeamMember member : selectedMembers) {
+            DatabaseUtil.addMemberToProject(created.get().getId(), member.getId());
+        }
         
         // Show success message with details
         StringBuilder membersText = new StringBuilder();

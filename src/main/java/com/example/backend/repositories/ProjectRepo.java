@@ -20,9 +20,30 @@ public class ProjectRepo extends RepositoryBase<Project>
     protected String InsertQuery() 
     {
         return String.format(
-            "INSERT INTO projects (title, description, manager_id, created_date) VALUES (?, ?, ?, %s)",
+            "INSERT INTO projects (title, description, manager_id, created_date) VALUES (?, ?, ?, '%s')",
             LocalDateTime.now().toString()
         );
+    }
+
+    public List<Project> GetAllForUser(Long userId)
+    {
+        try
+        {
+            var result = dbService.executeQuery(
+                """
+                    SELECT DISTINCT p.*
+                    FROM projects p
+                    LEFT JOIN project_memberships pm ON p.id = pm.project_id
+                    WHERE p.manager_id = ? OR pm.project_member_id = ?
+                    ORDER BY p.id DESC
+                """,
+                userId,
+                userId
+            );
+            return Util.MapResultToModelList(result, Project.class);
+        } catch (Exception e) {
+            return new ArrayList<>();
+        }
     }
 
     public boolean isUserMember(Long projectId, Long userId)

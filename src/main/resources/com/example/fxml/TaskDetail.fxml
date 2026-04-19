@@ -31,14 +31,37 @@
 
                 <Label fx:id="taskTitleLabel"/>
 
+                <HBox spacing="10">
+                    <Label text="Assignee:"/>
+                    <Label fx:id="assigneeLabel" text="Unassigned"/>
+                    <Label text="Due:"/>
+                    <Label fx:id="dueDateLabel" text="No deadline"/>
+                </HBox>
+
                 <GridPane hgap="20" vgap="10">
                     <ComboBox fx:id="statusComboBox"/>
                     <ComboBox fx:id="priorityComboBox"/>
+                    <ComboBox fx:id="assigneeComboBox" promptText="Assign member"/>
                 </GridPane>
 
                 <TextArea fx:id="descriptionArea"/>
 
-                <ListView fx:id="commentsListView"/>
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label fx:id="commentCountLabel" text="Comments (0)"/>
+                    <Pane HBox.hgrow="ALWAYS"/>
+                    <ComboBox fx:id="sortCommentsCombo" prefWidth="150"/>
+                </HBox>
+
+                <ListView fx:id="commentsListView" prefHeight="260"/>
+
+                <VBox spacing="8">
+                    <TextArea fx:id="newCommentArea" prefRowCount="3" wrapText="true"
+                              promptText="Write a comment..."/>
+                    <HBox spacing="10" alignment="CENTER_RIGHT">
+                        <Button fx:id="cancelCommentButton" text="Cancel"/>
+                        <Button fx:id="postCommentButton" text="Post Comment"/>
+                    </HBox>
+                </VBox>
             </VBox>
         </ScrollPane>
     </center>

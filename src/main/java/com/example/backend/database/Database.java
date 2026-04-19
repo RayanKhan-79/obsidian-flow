@@ -31,7 +31,10 @@ public class Database
             CreateUserPermissionsTable();
             CreateProjectsTable();
             CreateTasksTable();
+            EnsureTaskAssignmentColumn();
+            CreateCommentsTable();
             CreateProjectMembershipTable();
+            SeedDefaultAdmin();
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException();
@@ -88,6 +91,7 @@ public class Database
                 project_id INTEGER REFERENCES projects(id),
                 title TEXT NOT NULL,
                 description TEXT,
+                assigned_user_id INTEGER REFERENCES users(id),
                 priority INT,
                 status TEXT NOT NULL,
                 due_date TEXT,
@@ -97,6 +101,29 @@ public class Database
         executeUpdate(sql);
         System.out.println("Task Table Created");
 
+    }
+
+    private void EnsureTaskAssignmentColumn() {
+        try {
+            executeUpdate("ALTER TABLE tasks ADD COLUMN assigned_user_id INTEGER REFERENCES users(id)");
+        } catch (SQLException ignored) {
+            // Column likely already exists.
+        }
+    }
+
+    private void CreateCommentsTable() throws SQLException
+    {
+        String sql = """
+            CREATE TABLE IF NOT EXISTS comments (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                task_id INTEGER REFERENCES tasks(id),
+                user_id INTEGER REFERENCES users(id),
+                text TEXT NOT NULL,
+                created_date TEXT NOT NULL
+            )
+        """;
+        executeUpdate(sql);
+        System.out.println("Comments Table Created");
     }
 
     // Many to Many Table Project - Project Members
@@ -129,6 +156,32 @@ public class Database
 
         executeUpdate(sql);
         System.out.println("Projects Table Created");
+    }
+
+    private void SeedDefaultAdmin() throws SQLException
+    {
+        ResultSet rs = executeQuery("SELECT id FROM users WHERE email = ? LIMIT 1", "admin@example.com");
+        if (!rs.next()) {
+            executeUpdate(
+                "INSERT INTO users (first_name, last_name, email, password) VALUES (?, ?, ?, ?)",
+                "System",
+                "Admin",
+                "admin@example.com",
+                "admin123"
+            );
+
+            Long adminId = GetInsertedId();
+            executeUpdate(
+                "INSERT INTO user_permissions (user_id, permission) VALUES (?, ?)",
+                adminId,
+                "PROJECT_MANAGER"
+            );
+            executeUpdate(
+                "INSERT INTO user_permissions (user_id, permission) VALUES (?, ?)",
+                adminId,
+                "Admin"
+            );
+        }
     }
 
 

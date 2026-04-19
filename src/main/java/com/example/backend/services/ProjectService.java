@@ -67,7 +67,7 @@ public class ProjectService {
             return false;
 
         var currentUser = current.get();
-        if (!userRepo.HasPermission(memberUserId, Permissions.PROJECT_MANAGER))
+        if (!userRepo.HasPermission(currentUser.Id, Permissions.PROJECT_MANAGER))
             return false;
 
         var projectOpt = projectRepo.Find(projectId);

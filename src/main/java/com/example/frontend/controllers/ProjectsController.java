@@ -12,6 +12,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import java.io.IOException;
 
+import com.example.frontend.models.Project;
+import com.example.frontend.utils.DatabaseUtil;
+
 public class ProjectsController {
 
     @FXML private Button dashboardBtn;
@@ -48,8 +51,25 @@ public class ProjectsController {
     
     private void loadPage(String page) {
         try {
-            String fxmlFile = "/com/example/fxml/" + page.substring(0,1).toUpperCase() + page.substring(1) + ".fxml";
-            Parent root = FXMLLoader.load(getClass().getResource(fxmlFile));
+            String[] paths = {
+                "/com/example/fxml/" + page + ".fxml",
+                "/com/example/fxml/" + page.substring(0,1).toUpperCase() + page.substring(1) + ".fxml"
+            };
+
+            java.net.URL fxmlUrl = null;
+            for (String path : paths) {
+                fxmlUrl = getClass().getResource(path);
+                if (fxmlUrl != null) {
+                    break;
+                }
+            }
+
+            if (fxmlUrl == null) {
+                showAlert("Error", "Could not load page: " + page);
+                return;
+            }
+
+            Parent root = FXMLLoader.load(fxmlUrl);
             Stage stage = (Stage) dashboardBtn.getScene().getWindow();
             stage.setScene(new Scene(root,1200,800));
             stage.setTitle("Task Manager - " + page.substring(0,1).toUpperCase() + page.substring(1));
@@ -61,7 +81,7 @@ public class ProjectsController {
     
     private void handleLogout() {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/com/example/fxml/Login.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/com/example/fxml/login.fxml"));
             Stage stage = (Stage) logoutBtn.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle("Task Manager - Login");
@@ -109,9 +129,16 @@ private void showAlert(String title, String message) {
     
     private void loadProjects() {
         projectsListView.getItems().clear();
-        addProjectItem("Mobile App Development", "5 members", "24/36 tasks", "#6366f1");
-        addProjectItem("Website Redesign", "3 members", "12/18 tasks", "#f59e0b");
-        addProjectItem("API Integration", "4 members", "8/15 tasks", "#10b981");
+
+        for (Project project : DatabaseUtil.getCurrentUserProjects()) {
+            addProjectItem(
+                project.getName(),
+                "Owner ID: " + project.getOwnerId(),
+                "0/" + project.getTotalTasks() + " tasks",
+                project.getColor() == null ? "#6366f1" : project.getColor()
+            );
+        }
+
         totalProjectsLabel.setText("Total Projects: " + projectsListView.getItems().size());
     }
     
@@ -209,7 +236,7 @@ private void handleManageMembers(String projectName) {
     
     private void handleViewTasks(String projectName) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/fxml/Tasks.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/fxml/tasks.fxml"));
             Parent root = loader.load();
             
             TasksController controller = loader.getController();

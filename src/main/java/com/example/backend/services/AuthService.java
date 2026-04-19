@@ -31,7 +31,7 @@ public class AuthService
 
     public Boolean login(String email, String password)
     {
-        currentUser = userRepo.FindByEmailAndPassword(email, password);
+        currentUser = userRepo.FindByIdentifierAndPassword(email, password);
         return currentUser.isPresent();
     }
     

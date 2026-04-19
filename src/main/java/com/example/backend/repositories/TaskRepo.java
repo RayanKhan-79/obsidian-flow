@@ -20,9 +20,9 @@ public class TaskRepo extends RepositoryBase<Task>
     {
         return String.format("""
                 INSERT INTO %s 
-                (project_id, title, description, priority, status, due_date, created_date)
+                (project_id, title, description, assigned_user_id, priority, status, due_date, created_date)
                 VALUES
-                (?, ?, ?, ?, ?, ?, %s)
+                (?, ?, ?, ?, ?, ?, ?, '%s')
             """, 
             tableName, 
             LocalDateTime.now().toString()
@@ -36,5 +36,32 @@ public class TaskRepo extends RepositoryBase<Task>
         ); 
         
         return Util.MapResultToModelList(result, Task.class);
+    }
+
+    public boolean UpdateTask(
+        Long taskId,
+        Long assignedUserId,
+        Long priority,
+        String status,
+        String description,
+        String dueDate
+    ) {
+        try {
+            dbService.executeUpdate(
+                String.format(
+                    "UPDATE %s SET assigned_user_id = ?, priority = ?, status = ?, description = ?, due_date = ? WHERE id = ?",
+                    tableName
+                ),
+                assignedUserId,
+                priority,
+                status,
+                description,
+                dueDate,
+                taskId
+            );
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

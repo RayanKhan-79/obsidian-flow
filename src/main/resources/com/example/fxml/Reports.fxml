@@ -100,7 +100,9 @@
             <!-- Placeholder for chart -->
             <VBox spacing="10" style="-fx-background-color:white; -fx-padding:20; -fx-background-radius:10;" prefHeight="200">
                 <Label text="Report Chart" style="-fx-font-size:16px; -fx-font-weight:bold;"/>
-                <Label text="Chart will be displayed here" style="-fx-text-fill:#64748b;" alignment="CENTER"/>
+                <TextArea fx:id="reportOutputArea" prefHeight="150" wrapText="true"
+                          editable="false"
+                          promptText="Generated report summary appears here"/>
             </VBox>
 
         </VBox>

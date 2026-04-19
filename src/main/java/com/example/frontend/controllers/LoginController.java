@@ -1,6 +1,7 @@
 package com.example.frontend.controllers;
 
 import com.example.frontend.models.User;
+import com.example.frontend.utils.DatabaseUtil;
 import com.example.frontend.utils.SessionManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -53,9 +54,8 @@ public class LoginController {
             "-fx-cursor: hand;"
         );
 
-        // Add demo credentials hint
-        usernameField.setPromptText("Username (try 'sarah' for manager, 'john' for member)");
-        passwordField.setPromptText("Password (try 'password123')");
+        usernameField.setPromptText("Email or username");
+        passwordField.setPromptText("Password");
         
         // Hide error label initially
         errorLabel.setVisible(false);
@@ -82,8 +82,7 @@ public class LoginController {
             javafx.util.Duration.seconds(0.5)
         );
         pause.setOnFinished(e -> {
-            // Authenticate user
-            User user = User.loginUser(username, password);
+            User user = DatabaseUtil.login(username, password);
             
             loadingIndicator.setVisible(false);
             loginButton.setDisable(false);
@@ -93,10 +92,7 @@ public class LoginController {
                 SessionManager.setCurrentUser(user);
                 navigateToDashboard();
             } else {
-                showError("Invalid username or password. Try:\n" +
-                         "Manager: sarah / password123\n" +
-                         "Member: john / password123\n" +
-                         "Admin: admin / admin123");
+                showError("Invalid username/email or password");
             }
         });
         pause.play();
@@ -227,15 +223,12 @@ public class LoginController {
     @FXML
     private void handleForgotPassword() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Demo Credentials");
+        alert.setTitle("Authentication");
         alert.setHeaderText(null);
         alert.setContentText(
-            "Demo Users:\n\n" +
-            "Admin: admin / admin123\n" +
-            "Project Manager: sarah / password123\n" +
-            "Member: john / password123\n" +
-            "Member: mike / password123\n" +
-            "Viewer: bob / password123"
+            "Use your registered email/username and password.\n\n" +
+            "Default seeded account:\n" +
+            "admin@example.com / admin123"
         );
         alert.showAndWait();
     }

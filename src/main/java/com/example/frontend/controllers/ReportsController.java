@@ -7,6 +7,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import java.io.IOException;
+import java.time.LocalDate;
+
+import com.example.frontend.utils.DatabaseUtil;
 
 public class ReportsController {
 
@@ -28,12 +31,14 @@ public class ReportsController {
     @FXML private Label overdueTasksLabel;
     @FXML private Label totalProjectsLabel;
     @FXML private Label totalMembersLabel;
+    @FXML private TextArea reportOutputArea;
 
     @FXML
     public void initialize() {
         System.out.println("✅ ReportsController initialized");
         setupNavigation();
-        loadSampleData();
+        initializeReportFilters();
+        refreshSummary();
     }
     
     private void setupNavigation() {
@@ -52,8 +57,23 @@ public class ReportsController {
     
     private void loadPage(String page) {
         try {
-            String fxmlFile = "/com/example/fxml/" + page.substring(0,1).toUpperCase() + page.substring(1) + ".fxml";
-            Parent root = FXMLLoader.load(getClass().getResource(fxmlFile));
+            String[] paths = {
+                "/com/example/fxml/" + page + ".fxml",
+                "/com/example/fxml/" + page.substring(0,1).toUpperCase() + page.substring(1) + ".fxml"
+            };
+
+            java.net.URL fxmlUrl = null;
+            for (String path : paths) {
+                fxmlUrl = getClass().getResource(path);
+                if (fxmlUrl != null) break;
+            }
+
+            if (fxmlUrl == null) {
+                showAlert("Error", "Could not load " + page + " page");
+                return;
+            }
+
+            Parent root = FXMLLoader.load(fxmlUrl);
             Stage stage = (Stage) dashboardBtn.getScene().getWindow();
             stage.setScene(new Scene(root,1200,800));
             stage.setTitle("Task Manager - " + page.substring(0,1).toUpperCase() + page.substring(1));
@@ -67,7 +87,7 @@ public class ReportsController {
     
     private void handleLogout() {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/com/example/fxml/Login.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/com/example/fxml/login.fxml"));
             Stage stage = (Stage) logoutBtn.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle("Task Manager - Login");
@@ -78,14 +98,7 @@ public class ReportsController {
         }
     }
     
-    private void loadSampleData() {
-        if (totalTasksLabel != null) totalTasksLabel.setText("128");
-        if (completedTasksLabel != null) completedTasksLabel.setText("86");
-        if (pendingTasksLabel != null) pendingTasksLabel.setText("32");
-        if (overdueTasksLabel != null) overdueTasksLabel.setText("10");
-        if (totalProjectsLabel != null) totalProjectsLabel.setText("8");
-        if (totalMembersLabel != null) totalMembersLabel.setText("12");
-        
+    private void initializeReportFilters() {
         if (reportTypeComboBox != null) {
             reportTypeComboBox.getItems().addAll(
                 "Task Summary",
@@ -95,10 +108,56 @@ public class ReportsController {
             );
             reportTypeComboBox.setValue("Task Summary");
         }
+
+        if (startDatePicker != null) {
+            startDatePicker.setValue(LocalDate.now().minusDays(30));
+        }
+
+        if (endDatePicker != null) {
+            endDatePicker.setValue(LocalDate.now());
+        }
+    }
+
+    private void refreshSummary() {
+        var summary = DatabaseUtil.buildReportSummary(
+            startDatePicker == null ? null : startDatePicker.getValue(),
+            endDatePicker == null ? null : endDatePicker.getValue()
+        );
+
+        if (totalTasksLabel != null) totalTasksLabel.setText(String.valueOf(summary.totalTasks()));
+        if (completedTasksLabel != null) completedTasksLabel.setText(String.valueOf(summary.completedTasks()));
+        if (pendingTasksLabel != null) pendingTasksLabel.setText(String.valueOf(summary.pendingTasks()));
+        if (overdueTasksLabel != null) overdueTasksLabel.setText(String.valueOf(summary.overdueTasks()));
+        if (totalProjectsLabel != null) totalProjectsLabel.setText(String.valueOf(summary.totalProjects()));
+        if (totalMembersLabel != null) totalMembersLabel.setText(String.valueOf(summary.totalMembers()));
     }
     
     private void generateReport() {
-        showInfo("Generate Report", "Report generation will be implemented here");
+        refreshSummary();
+
+        String reportType = reportTypeComboBox == null ? "Task Summary" : reportTypeComboBox.getValue();
+        LocalDate start = startDatePicker == null ? null : startDatePicker.getValue();
+        LocalDate end = endDatePicker == null ? null : endDatePicker.getValue();
+
+        var summary = DatabaseUtil.buildReportSummary(start, end);
+        String text = String.format(
+            "Report Type: %s%nPeriod: %s to %s%n%nTotal Tasks: %d%nCompleted: %d%nPending: %d%nOverdue: %d%nProjects: %d%nTeam Members: %d",
+            reportType,
+            start == null ? "-" : start,
+            end == null ? "-" : end,
+            summary.totalTasks(),
+            summary.completedTasks(),
+            summary.pendingTasks(),
+            summary.overdueTasks(),
+            summary.totalProjects(),
+            summary.totalMembers()
+        );
+
+        if (reportOutputArea != null) {
+            reportOutputArea.setText(text);
+        }
+
+        showInfo("Report Generated", reportType + " has been generated from live task/project data.");
     }
     
     private void showAlert(String title, String message) {
