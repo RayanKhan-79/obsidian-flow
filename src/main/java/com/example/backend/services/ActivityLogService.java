@@ -1,8 +1,12 @@
 package com.example.backend.services;
 
+import com.example.backend.database.Database;
+import com.example.backend.repositories.ActivityLogRepo;
+
 public class ActivityLogService {
 
     private static ActivityLogService instance;
+    private final ActivityLogRepo activityLogRepo;
 
     public static ActivityLogService GetInstance() {
         if (instance == null)
@@ -11,23 +15,10 @@ public class ActivityLogService {
     }
 
     private ActivityLogService() {
+        activityLogRepo = new ActivityLogRepo(Database.GetInstance());
     }
 
-    // Placeholder methods for activity logging (to be implemented later)
-
-    public void logProjectCreated(Long projectId, Long userId) {
-        // TODO: record that a project was created
-    }
-
-    public void logMemberAdded(Long projectId, Long userId, Long addedUserId) {
-        // TODO: record that a member was added to a project
-    }
-
-    public void logTaskCreated(Long taskId, Long projectId, Long userId) {
-        // TODO: record that a task was created
-    }
-
-    public void logCommentAdded(Long commentId, Long taskId, Long userId) {
-        // TODO: record that a comment was added
+    public void addLogMessage(String message) {
+        activityLogRepo.Create(message);
     }
 }

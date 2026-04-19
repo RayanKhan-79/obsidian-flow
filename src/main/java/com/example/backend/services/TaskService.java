@@ -22,11 +22,13 @@ public class TaskService {
     private final AuthService authService;
     private final ProjectRepo projectRepo;
     private final TaskRepo taskRepo;
+    private final ActivityLogService logService;
 
     private TaskService() {
         authService = AuthService.GetInstance();
         projectRepo = new ProjectRepo(Database.GetInstance());
         taskRepo = new TaskRepo(Database.GetInstance());
+        logService = ActivityLogService.GetInstance();
     }
 
     /**
@@ -56,13 +58,21 @@ public class TaskService {
         if (!isManager && !isMember)
             return Optional.empty();
 
-        return taskRepo.Create(
+        
+        Task task = taskRepo.Create(
             projectId,
             title.trim(),
             description,
             priority,
             TaskStatus.PENDING.toString(),
             dueDate != null ? dueDate.toString() : null
-        );
+        ).get();
+        
+        logService.addLogMessage(String.format(
+            "%s added a new task \"%s\" on project \"%s\"",
+            current.email,  task.title, projectOpt.get().title
+        ));
+        
+        return Optional.of(task);
     }
 }

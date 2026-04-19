@@ -58,8 +58,7 @@ public class Database
         String sql = """
             CREATE TABLE IF NOT EXISTS activity_log (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                user_id INTEGER REFERENCES users(id),
-                description TEXT NOT NULL,
+                message TEXT NOT NULL,
                 timestamp TEXT NOT NULL
             )
         """;

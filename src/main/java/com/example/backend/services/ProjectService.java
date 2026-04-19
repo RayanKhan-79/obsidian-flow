@@ -23,12 +23,14 @@ public class ProjectService {
     }
 
     private final AuthService authService;
+    private final ActivityLogService logService;
     private final ProjectRepo projectRepo;
     private final UserRepo userRepo;
     private final TaskRepo taskRepo;
 
     private ProjectService() {
         authService = AuthService.GetInstance();
+        logService = ActivityLogService.GetInstance();
         projectRepo = new ProjectRepo(Database.GetInstance());
         userRepo = new UserRepo(Database.GetInstance());
         taskRepo = new TaskRepo(Database.GetInstance());
@@ -55,7 +57,14 @@ public class ProjectService {
         if (title == null || title.trim().isEmpty())
             return Optional.empty();
 
-        return projectRepo.Create(title.trim(), description, currentUser.Id);
+        
+        Project project = projectRepo.Create(title.trim(), description, currentUser.Id).get();
+        
+        logService.addLogMessage(String.format(
+            "%s created a new project \"%s\"",
+        currentUser.email, project.title));
+
+        return Optional.of(project);
     }
 
     public boolean addMemberToProject(Long projectId, Long memberUserId) {
@@ -86,6 +95,13 @@ public class ProjectService {
         // Prevent duplicate assignments
         if (projectRepo.isUserMember(projectId, memberUserId))
             return false;
+
+        var member = userRepo.Find(memberUserId).get();
+
+        logService.addLogMessage(String.format(
+            "%s added %s to project \"%s\"",
+            currentUser.email, member.email, project.title
+        ));
 
         return projectRepo.addMemberToProject(projectId, memberUserId);
     }
