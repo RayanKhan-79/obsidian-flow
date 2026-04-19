@@ -32,9 +32,8 @@ public class Task
             dueDate = LocalDateTime.parse(rs.getString(Constants.DUE_DATE));
             createdDate = LocalDateTime.parse(rs.getString(Constants.CREATED_DATE));            
 
-        } catch (SQLException e) {
-            System.out.println("Task Parsing Error");
-            System.exit(1);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to parse Task", e);
         }
     }
 }

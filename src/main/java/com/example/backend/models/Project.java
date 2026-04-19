@@ -24,8 +24,7 @@ public class Project
             createdDate = LocalDateTime.parse(rs.getString(Constants.CREATED_DATE));
             
         } catch (Exception e) {
-            System.out.println("Project Parsing Error");
-            throw new RuntimeException();
+            throw new RuntimeException("Failed to parse Project", e);
         }
     }
 }
