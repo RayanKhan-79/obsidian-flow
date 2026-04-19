@@ -11,7 +11,7 @@ public class CommentRepo extends RepositoryBase<Comment> {
 
     public CommentRepo(Database dbService) 
     {
-        super("Comments", dbService, Comment.class);
+        super("comments", dbService, Comment.class);
     }
 
     @Override

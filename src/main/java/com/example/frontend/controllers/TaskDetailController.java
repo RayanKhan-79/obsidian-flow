@@ -3,6 +3,7 @@ package com.example.frontend.controllers;
 import com.example.frontend.models.Task;
 import com.example.frontend.models.Comment;
 import com.example.frontend.models.User;
+import com.example.frontend.utils.DatabaseUtil;
 import com.example.frontend.utils.SessionManager;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -24,6 +25,7 @@ public class TaskDetailController {
     @FXML private Label taskTitleLabel;
     @FXML private ComboBox<String> statusComboBox;
     @FXML private ComboBox<String> priorityComboBox;
+    @FXML private ComboBox<String> assigneeComboBox;
     @FXML private Label assigneeLabel;
     @FXML private Label dueDateLabel;
     @FXML private TextArea descriptionArea;
@@ -53,36 +55,73 @@ public class TaskDetailController {
     }
     
     private void setupComboBoxes() {
-        statusComboBox.setItems(javafx.collections.FXCollections.observableArrayList(
-            "To Do", "In Progress", "Done", "Blocked"
-        ));
+        if (statusComboBox != null) {
+            statusComboBox.setItems(javafx.collections.FXCollections.observableArrayList(
+                "To Do", "In Progress", "Done", "Blocked"
+            ));
+        }
         
-        priorityComboBox.setItems(javafx.collections.FXCollections.observableArrayList(
-            "High", "Medium", "Low"
-        ));
+        if (priorityComboBox != null) {
+            priorityComboBox.setItems(javafx.collections.FXCollections.observableArrayList(
+                "High", "Medium", "Low"
+            ));
+        }
         
-        sortCommentsCombo.setItems(javafx.collections.FXCollections.observableArrayList(
-            "Newest First", "Oldest First"
-        ));
-        sortCommentsCombo.setValue("Newest First");
+        if (sortCommentsCombo != null) {
+            sortCommentsCombo.setItems(javafx.collections.FXCollections.observableArrayList(
+                "Newest First", "Oldest First"
+            ));
+            sortCommentsCombo.setValue("Newest First");
+        }
+
+        if (assigneeComboBox != null) {
+            assigneeComboBox.getItems().setAll(
+                DatabaseUtil.getAllUsers().stream().map(User::getFullName).toList()
+            );
+        }
     }
     
     private void setupEventHandlers() {
-        postCommentButton.setOnAction(e -> handlePostComment());
-        cancelCommentButton.setOnAction(e -> {
-            newCommentArea.clear();
-            selectedCommentForReply = null;
-            postCommentButton.setText("Post Comment");
-        });
-        backButton.setOnAction(e -> handleClose());
-        refreshButton.setOnAction(e -> refreshComments());
-        sortCommentsCombo.setOnAction(e -> refreshCommentsList());
+        if (postCommentButton != null) {
+            postCommentButton.setOnAction(e -> handlePostComment());
+        }
+        if (cancelCommentButton != null) {
+            cancelCommentButton.setOnAction(e -> {
+                if (newCommentArea != null) {
+                    newCommentArea.clear();
+                }
+                selectedCommentForReply = null;
+                if (postCommentButton != null) {
+                    postCommentButton.setText("Post Comment");
+                }
+            });
+        }
+        if (backButton != null) {
+            backButton.setOnAction(e -> handleClose());
+        }
+        if (refreshButton != null) {
+            refreshButton.setOnAction(e -> refreshComments());
+        }
+        if (sortCommentsCombo != null) {
+            sortCommentsCombo.setOnAction(e -> refreshCommentsList());
+        }
+        if (assigneeComboBox != null) {
+            assigneeComboBox.setOnAction(e -> handleAssigneeChange());
+        }
         
-        statusComboBox.setOnAction(e -> handleStatusChange());
-        priorityComboBox.setOnAction(e -> handlePriorityChange());
+        if (statusComboBox != null) {
+            statusComboBox.setOnAction(e -> handleStatusChange());
+        }
+        if (priorityComboBox != null) {
+            priorityComboBox.setOnAction(e -> handlePriorityChange());
+        }
     }
     
     private void setupCommentsListView() {
+        if (commentsListView == null) {
+            return;
+        }
+
         commentsListView.setCellFactory(lv -> new ListCell<Comment>() {
             @Override
             protected void updateItem(Comment comment, boolean empty) {
@@ -207,86 +246,49 @@ public class TaskDetailController {
         this.currentTask = task;
         
         // Populate fields
-        taskTitleLabel.setText(task.getName() != null ? task.getName() : "Untitled Task");
-        taskProjectLabel.setText(task.getProject() != null ? task.getProject() : "No Project");
-        taskIdLabel.setText("TASK-" + (int)(Math.random() * 1000));
-        statusComboBox.setValue(task.getStatus() != null ? task.getStatus() : "To Do");
-        priorityComboBox.setValue(task.getPriority() != null ? task.getPriority() : "Medium");
-        assigneeLabel.setText(task.getAssignedTo() != null ? task.getAssignedTo() : "Unassigned");
-        dueDateLabel.setText(task.getDeadline() != null ? task.getDeadline().toString() : "No deadline");
-        descriptionArea.setText(task.getDescription() != null ? task.getDescription() : 
-                              "No description provided for " + task.getName());
+        if (taskTitleLabel != null) taskTitleLabel.setText(task.getName() != null ? task.getName() : "Untitled Task");
+        if (taskProjectLabel != null) taskProjectLabel.setText(task.getProject() != null ? task.getProject() : "No Project");
+        if (taskIdLabel != null) taskIdLabel.setText("TASK-" + (int)(Math.random() * 1000));
+        if (statusComboBox != null) statusComboBox.setValue(task.getStatus() != null ? task.getStatus() : "To Do");
+        if (priorityComboBox != null) priorityComboBox.setValue(task.getPriority() != null ? task.getPriority() : "Medium");
+        if (assigneeLabel != null) assigneeLabel.setText(task.getAssignedTo() != null ? task.getAssignedTo() : "Unassigned");
+        if (assigneeComboBox != null) {
+            assigneeComboBox.setValue(task.getAssignedTo());
+        }
+        if (dueDateLabel != null) dueDateLabel.setText(task.getDeadline() != null ? task.getDeadline().toString() : "No deadline");
+        if (descriptionArea != null) {
+            descriptionArea.setText(task.getDescription() != null ? task.getDescription() : 
+                                "No description provided for " + task.getName());
+        }
         
-        createdByLabel.setText(task.getCreatedBy() != null ? task.getCreatedBy() : "System");
-        createdAtLabel.setText(task.getCreatedAt() != null ? 
+        if (createdByLabel != null) createdByLabel.setText(task.getCreatedBy() != null ? task.getCreatedBy() : "System");
+        if (createdAtLabel != null) createdAtLabel.setText(task.getCreatedAt() != null ? 
                               task.getCreatedAt().format(DateTimeFormatter.ofPattern("MMM dd, yyyy HH:mm")) : 
                               "Unknown");
         
-        // Load comments
-        loadSampleComments();
+        // Load persisted comments for this task.
+        loadComments();
     }
     
-    private void loadSampleComments() {
+    private void loadComments() {
         comments.clear();
-        
-        // Main comment 1
-        Comment comment1 = new Comment(currentTask.getId(), 1, "Sarah Johnson", 
-            "@john I've started working on the login API. The authentication flow needs to be discussed.");
-        comment1.setId(1);
-        comment1.setCreatedAt(LocalDateTime.now().minusHours(3));
-        comment1.addLike(2);
-        comment1.addLike(3);
-        
-        // Reply to comment1
-        Comment reply1 = new Comment(currentTask.getId(), 2, "John Doe", 
-            "@sarah Sure! I think we should use JWT tokens. What's your opinion?");
-        reply1.setId(2);
-        reply1.setParentCommentId(1);
-        reply1.setCreatedAt(LocalDateTime.now().minusHours(2));
-        reply1.addLike(1);
-        
-        // Another reply
-        Comment reply2 = new Comment(currentTask.getId(), 1, "Sarah Johnson", 
-            "@john Agreed. JWT is the way to go. I'll update the documentation.");
-        reply2.setId(3);
-        reply2.setParentCommentId(1);
-        reply2.setCreatedAt(LocalDateTime.now().minusHours(1));
-        
-        comment1.addReply(reply1);
-        comment1.addReply(reply2);
-        
-        // Main comment 2
-        Comment comment2 = new Comment(currentTask.getId(), 3, "Mike Chen", 
-            "@john @sarah I've already implemented the JWT helper class. Let me know if you need it.");
-        comment2.setId(4);
-        comment2.setCreatedAt(LocalDateTime.now().minusDays(1));
-        comment2.addMention(1);
-        comment2.addMention(2);
-        comment2.addLike(2);
-        
-        // Main comment 3
-        Comment comment3 = new Comment(currentTask.getId(), 4, "Alice Brown", 
-            "Don't forget to add rate limiting to the login endpoint.");
-        comment3.setId(5);
-        comment3.setCreatedAt(LocalDateTime.now().minusDays(2));
-        comment3.addLike(1);
-        comment3.addLike(2);
-        comment3.addLike(3);
-        
-        comments.add(comment1);
-        comments.add(comment2);
-        comments.add(comment3);
-        
+        if (currentTask != null) {
+            comments.addAll(DatabaseUtil.getCommentsForTask(currentTask.getId()));
+        }
         refreshCommentsList();
         updateCommentCount();
     }
     
     private void refreshCommentsList() {
+        if (commentsListView == null) {
+            return;
+        }
+
         commentsListView.getItems().clear();
         
         // Sort comments
         List<Comment> sortedComments = new ArrayList<>(comments);
-        if ("Newest First".equals(sortCommentsCombo.getValue())) {
+        if (sortCommentsCombo == null || "Newest First".equals(sortCommentsCombo.getValue())) {
             sortedComments.sort((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()));
         } else {
             sortedComments.sort((a, b) -> a.getCreatedAt().compareTo(b.getCreatedAt()));
@@ -296,6 +298,10 @@ public class TaskDetailController {
     }
     
     private void updateCommentCount() {
+        if (commentCountLabel == null) {
+            return;
+        }
+
         int totalComments = comments.size();
         int totalReplies = comments.stream().mapToInt(c -> c.getReplies().size()).sum();
         commentCountLabel.setText("Comments (" + (totalComments + totalReplies) + ")");
@@ -303,63 +309,56 @@ public class TaskDetailController {
     
     @FXML
     private void handlePostComment() {
+        if (newCommentArea == null || currentUser == null || currentTask == null) {
+            return;
+        }
+
         String content = newCommentArea.getText();
         if (content == null || content.trim().isEmpty()) {
             showAlert("Error", "Comment cannot be empty");
             return;
         }
+
+        String finalContent = content.trim();
+        if (selectedCommentForReply != null) {
+            finalContent = "@" + selectedCommentForReply.getUserName() + " " + finalContent;
+        }
+
+        var saved = DatabaseUtil.addCommentToTask(currentTask.getId(), finalContent);
+        if (saved.isEmpty()) {
+            showAlert("Error", "Could not save comment");
+            return;
+        }
         
         if (selectedCommentForReply != null) {
-            // This is a reply
-            Comment reply = new Comment(
-                currentTask.getId(),
-                currentUser.getId(),
-                currentUser.getFullName(),
-                content
-            );
-            reply.setParentCommentId(selectedCommentForReply.getId());
-            reply.setCreatedAt(LocalDateTime.now());
-            reply.setId(comments.size() + 100);
-            
-            // Find parent and add reply
-            for (Comment c : comments) {
-                if (c.getId() == selectedCommentForReply.getId()) {
-                    c.addReply(reply);
-                    break;
-                }
-            }
-            
             showInfo("Success", "Reply posted");
             selectedCommentForReply = null;
             postCommentButton.setText("Post Comment");
+            newCommentArea.setPromptText("Write a comment...");
         } else {
-            // This is a new top-level comment
-            Comment newComment = new Comment(
-                currentTask.getId(),
-                currentUser.getId(),
-                currentUser.getFullName(),
-                content
-            );
-            newComment.setCreatedAt(LocalDateTime.now());
-            newComment.setId(comments.size() + 100);
-            
-            comments.add(newComment);
             showInfo("Success", "Comment posted");
         }
         
         newCommentArea.clear();
-        refreshCommentsList();
-        updateCommentCount();
+        loadComments();
     }
     
     private void handleReplyToComment(Comment comment) {
         selectedCommentForReply = comment;
-        newCommentArea.requestFocus();
-        newCommentArea.setPromptText("Reply to " + comment.getUserName() + "...");
-        postCommentButton.setText("Post Reply");
+        if (newCommentArea != null) {
+            newCommentArea.requestFocus();
+            newCommentArea.setPromptText("Reply to " + comment.getUserName() + "...");
+        }
+        if (postCommentButton != null) {
+            postCommentButton.setText("Post Reply");
+        }
     }
     
     private void handleLikeComment(Comment comment, Button likeBtn) {
+        if (currentUser == null) {
+            return;
+        }
+
         if (comment.isLikedBy(currentUser.getId())) {
             comment.removeLike(currentUser.getId());
         } else {
@@ -413,11 +412,15 @@ public class TaskDetailController {
     }
     
     private void handleStatusChange() {
+        if (currentTask == null || statusComboBox.getValue() == null)
+            return;
+
         String newStatus = statusComboBox.getValue();
         String oldStatus = currentTask.getStatus();
         
         if (!newStatus.equals(oldStatus)) {
             currentTask.setStatus(newStatus);
+            persistTaskChanges();
             
             // Add system comment about status change
             Comment statusComment = new Comment(
@@ -436,11 +439,15 @@ public class TaskDetailController {
     }
     
     private void handlePriorityChange() {
+        if (currentTask == null || priorityComboBox.getValue() == null)
+            return;
+
         String newPriority = priorityComboBox.getValue();
         String oldPriority = currentTask.getPriority();
         
         if (!newPriority.equals(oldPriority)) {
             currentTask.setPriority(newPriority);
+            persistTaskChanges();
             
             // Add system comment about priority change
             Comment priorityComment = new Comment(
@@ -457,12 +464,43 @@ public class TaskDetailController {
     }
     
     private void refreshComments() {
-        refreshCommentsList();
+        loadComments();
         showInfo("Refreshed", "Comments list updated");
+    }
+
+    private void handleAssigneeChange() {
+        if (currentTask == null || assigneeComboBox == null)
+            return;
+
+        String assignee = assigneeComboBox.getValue();
+        if (assignee == null || assignee.isBlank())
+            return;
+
+        User user = DatabaseUtil.findUserByFullName(assignee);
+        currentTask.setAssignedTo(assignee);
+        currentTask.setAssignedToId(user == null ? 0 : user.getId());
+        if (assigneeLabel != null) {
+            assigneeLabel.setText(assignee);
+        }
+        persistTaskChanges();
+    }
+
+    private void persistTaskChanges() {
+        if (currentTask == null)
+            return;
+
+        if (descriptionArea != null) {
+            currentTask.setDescription(descriptionArea.getText());
+        }
+        boolean updated = DatabaseUtil.updateTask(currentTask);
+        if (!updated) {
+            showAlert("Update Failed", "Could not save task changes");
+        }
     }
     
     @FXML
     private void handleClose() {
+        persistTaskChanges();
         Stage stage = (Stage) taskTitleLabel.getScene().getWindow();
         stage.close();
     }

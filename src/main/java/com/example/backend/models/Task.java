@@ -14,6 +14,7 @@ public class Task
     public Long project_id;
     public String title;
     public String description;
+    public Long assignedUserId;
     public Long priority;
     public TaskStatus status;
     public LocalDateTime dueDate;
@@ -27,9 +28,12 @@ public class Task
             project_id = rs.getLong(Constants.PROJECT_ID);
             title = rs.getString(Constants.TITLE);
             description = rs.getString(Constants.DESCRIPTION);
+            var rawAssignedUserId = rs.getObject(Constants.ASSIGNED_USER_ID);
+            assignedUserId = rawAssignedUserId == null ? null : ((Number) rawAssignedUserId).longValue();
             status = Enum.valueOf(TaskStatus.class, rs.getString(Constants.STATUS));
             priority = rs.getLong(Constants.PRIORITY);
-            dueDate = LocalDateTime.parse(rs.getString(Constants.DUE_DATE));
+            var dueDateRaw = rs.getString(Constants.DUE_DATE);
+            dueDate = dueDateRaw == null || dueDateRaw.isBlank() ? null : LocalDateTime.parse(dueDateRaw);
             createdDate = LocalDateTime.parse(rs.getString(Constants.CREATED_DATE));            
 
         } catch (Exception e) {

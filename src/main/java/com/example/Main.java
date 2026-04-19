@@ -12,30 +12,14 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
-            System.out.println("Loading login screen...");
-            
-            // Use the correct path based on your resources folder
-            FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/fxml/Login.fxml")  // Try this path first
-            );
-            
-            // Alternative path if above doesn't work
-            if (loader.getLocation() == null) {
-                System.out.println("Trying alternative path...");
-                loader = new FXMLLoader(
-                    getClass().getResource("/com/example/fxml/Login.fxml")
-                );
-            }
-            
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/fxml/login.fxml"));
+
             if (loader.getLocation() == null) {
                 System.err.println("ERROR: Could not find login.fxml");
-                System.err.println("Current working directory: " + System.getProperty("user.dir"));
-                System.err.println("Classpath: " + System.getProperty("java.class.path"));
                 return;
             }
             
             Parent root = loader.load();
-            System.out.println("Login screen loaded successfully");
             
             Scene scene = new Scene(root);
             
@@ -56,8 +40,6 @@ public class Main extends Application {
             primaryStage.setResizable(true);
             primaryStage.centerOnScreen();
             primaryStage.show();
-            
-            System.out.println("Application started successfully");
             
         } catch (Exception e) {
             System.err.println("ERROR starting application: " + e.getMessage());

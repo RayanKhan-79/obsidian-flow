@@ -36,6 +36,42 @@ public class UserRepo extends RepositoryBase<User> {
         return Util.MapResultToModel(result, model);
     }
 
+    public Optional<User> FindByIdentifierAndPassword(String identifier, String password)
+    {
+        ResultSet result = dbService.executeQuery(
+            String.format(
+                "SELECT * FROM %s WHERE (email = ? OR substr(email, 1, instr(email, '@') - 1) = ?) AND password = ?",
+                tableName
+            ),
+            identifier,
+            identifier,
+            password
+        );
+        return Util.MapResultToModel(result, model);
+    }
+
+    public List<User> GetAll()
+    {
+        ResultSet result = dbService.executeQuery(
+            String.format("SELECT * FROM %s ORDER BY id", tableName)
+        );
+        return Util.MapResultToModelList(result, model);
+    }
+
+    public boolean ExistsByEmail(String email)
+    {
+        try
+        {
+            ResultSet result = dbService.executeQuery(
+                String.format("SELECT 1 FROM %s WHERE email = ? LIMIT 1", tableName),
+                email
+            );
+            return result.next();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public Boolean AddPermission(Long Id, Permissions permission)
     {
         try 

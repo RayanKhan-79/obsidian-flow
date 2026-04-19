@@ -1,6 +1,7 @@
 package com.example.frontend.controllers;
 
 import com.example.frontend.models.User;
+import com.example.frontend.utils.DatabaseUtil;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -35,7 +36,7 @@ public class SignupController {
     public void initialize() {
         // Load logo (comment out if no logo yet)
         try {
-            Image logo = new Image(getClass().getResourceAsStream("D:\\Downloads\\VS Code\\Github\\obsidian-flow\\src\\main\\resources\\com\\example\\images\\logo.jpeg"));
+            Image logo = new Image(getClass().getResourceAsStream("/com/example/images/logo.jpeg"));
             logoImage.setImage(logo);
         } catch (Exception e) {
             System.out.println("Logo not found, continuing without logo");
@@ -171,9 +172,7 @@ public class SignupController {
             javafx.util.Duration.seconds(0.5)
         );
         pause.setOnFinished(e -> {
-            // Create new user
-            User newUser = new User(username, email, password, fullName, confirmPassword, confirmPassword);
-            boolean registered = User.registerUser(newUser);
+            boolean registered = DatabaseUtil.register(fullName, email, password);
             
             loadingIndicator.setVisible(false);
             signupButton.setDisable(false);

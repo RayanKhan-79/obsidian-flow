@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import com.example.frontend.models.Task;
+import com.example.frontend.utils.DatabaseUtil;
 
 public class DashboardController {
 
@@ -70,29 +71,28 @@ public class DashboardController {
     
     private void loadDashboardData() {
         try {
-            // In real app, this would come from database
-            totalTasksValue.setText("128");
-            completedTasksValue.setText("86");
-            pendingTasksValue.setText("32");
-            overdueTasksValue.setText("10");
-            
-            // Update completion percentage
-            int total = 128;
-            int completed = 86;
-            int percentage = (completed * 100) / total;
+            ObservableList<Task> liveTasks = FXCollections.observableArrayList(DatabaseUtil.getCurrentUserTasks());
+
+            int total = liveTasks.size();
+            int completed = (int) liveTasks.stream().filter(t -> "Done".equalsIgnoreCase(t.getStatus())).count();
+            int pending = total - completed;
+            int overdue = (int) liveTasks.stream()
+                .filter(t -> t.getDeadline() != null && t.getDeadline().isBefore(LocalDate.now()))
+                .count();
+
+            totalTasksValue.setText(String.valueOf(total));
+            completedTasksValue.setText(String.valueOf(completed));
+            pendingTasksValue.setText(String.valueOf(pending));
+            overdueTasksValue.setText(String.valueOf(overdue));
+
+            int percentage = total == 0 ? 0 : (completed * 100) / total;
             if (projectCompletionLabel != null) {
                 projectCompletionLabel.setText("Overall Progress: " + percentage + "%");
                 projectCompletionLabel.setVisible(true);
+                projectCompletionLabel.setManaged(true);
             }
-            
-            // Load sample tasks
-            ObservableList<Task> sampleTasks = FXCollections.observableArrayList(
-                new Task("Implement Login", "High", "In Progress", "Mobile App", LocalDate.now().plusDays(2)),
-                new Task("Design Database", "Medium", "To Do", "Mobile App", LocalDate.now().plusDays(5)),
-                new Task("Create UI Mockups", "High", "Done", "Website", LocalDate.now().minusDays(1)),
-                new Task("Write Documentation", "Low", "To Do", "API", LocalDate.now().plusDays(7))
-            );
-            taskTable.setItems(sampleTasks);
+
+            taskTable.setItems(liveTasks);
             
         } catch (Exception e) {
             System.out.println("Error loading dashboard data: " + e.getMessage());
@@ -136,7 +136,7 @@ public class DashboardController {
                     title = "Task Manager - Projects";
                     break;
                 case "tasks":
-                    fxmlFile = "/com/example/fxml/Tasks.fxml";
+                    fxmlFile = "/com/example/fxml/tasks.fxml";
                     title = "Task Manager - Tasks";
                     break;
                 case "team":
@@ -261,9 +261,9 @@ public class DashboardController {
             System.out.println("Logging out...");
             
             String[] paths = {
-                "/com/example/fxml/Login.fxml",
-                "/fxml/Login.fxml",
-                "/Login.fxml"
+                "/com/example/fxml/login.fxml",
+                "/fxml/login.fxml",
+                "/login.fxml"
             };
             
             java.net.URL fxmlUrl = null;

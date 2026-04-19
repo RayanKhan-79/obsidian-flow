@@ -27,7 +27,7 @@ public class AuthService {
     }
 
     public Boolean login(String email, String password) {
-        currentUser = userRepo.FindByEmailAndPassword(email, password);
+        currentUser = userRepo.FindByIdentifierAndPassword(email, password);
 
         if (currentUser.isPresent())
             logService.addLogMessage(String.format("%s has logged in", currentUser.get().email));

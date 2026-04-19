@@ -4,8 +4,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import java.time.LocalDate;
+import java.util.List;
 
+import com.example.frontend.models.Project;
 import com.example.frontend.models.Task;
+import com.example.frontend.utils.DatabaseUtil;
 
 
 public class AddTaskController {
@@ -19,9 +22,13 @@ public class AddTaskController {
 
     @FXML
     public void initialize() {
-        // Initialize combo boxes
-        assignedBox.getItems().addAll("Ali", "Sara", "John", "Ahmed", "Mike", "Sarah");
-        assignedBox.setValue("John"); // Default value
+        List<String> userNames = DatabaseUtil.getAllUsers().stream()
+            .map(user -> user.getFullName() == null || user.getFullName().isBlank() ? user.getUsername() : user.getFullName())
+            .toList();
+        assignedBox.getItems().addAll(userNames);
+        if (!assignedBox.getItems().isEmpty()) {
+            assignedBox.setValue(assignedBox.getItems().get(0));
+        }
         
         priorityBox.getItems().addAll("Low", "Medium", "High");
         priorityBox.setValue("Medium"); // Default value
@@ -41,16 +48,31 @@ public class AddTaskController {
             return;
         }
         
-        // Create new task
-        Task task = new Task(
-                taskNameField.getText().trim(),
-                assignedBox.getValue(),
-                priorityBox.getValue(),
-                statusBox.getValue(),
-                deadlinePicker.getValue()
+        List<Project> projects = DatabaseUtil.getCurrentUserProjects();
+        if (projects.isEmpty()) {
+            showAlert("Error", "No accessible project found. Create or join a project first.");
+            return;
+        }
+
+        Project selectedProject = projects.get(0);
+        var selectedUser = DatabaseUtil.findUserByFullName(assignedBox.getValue());
+        var created = DatabaseUtil.createTask(
+            selectedProject.getId(),
+            taskNameField.getText().trim(),
+            "",
+            priorityBox.getValue(),
+            deadlinePicker.getValue(),
+            selectedUser == null ? null : selectedUser.getId()
         );
-        
-        // Add to shared tasks list
+
+        if (created.isEmpty()) {
+            showAlert("Error", "Task could not be created. Ensure you have project access.");
+            return;
+        }
+
+        Task task = created.get();
+        task.setAssignedTo(assignedBox.getValue());
+        task.setAssignedToId(selectedUser == null ? 0 : selectedUser.getId());
         TasksController.getTasks().add(task);
         
         // Show success message

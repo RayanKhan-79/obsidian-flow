@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import javafx.beans.property.SimpleStringProperty;
 
 import com.example.frontend.models.Task;
+import com.example.frontend.utils.DatabaseUtil;
 
 public class TasksController {
 
@@ -43,7 +44,7 @@ public class TasksController {
         System.out.println("✅ TasksController initialized");
         
         setupTableColumns();
-        loadSampleTasks();
+        loadTasksFromBackend();
         setupProjectFilter();
         setupNavigation();
         setupSearch();
@@ -74,19 +75,20 @@ public class TasksController {
         });
         
         taskTable.setItems(tasks);
+        taskTable.setRowFactory(tv -> {
+            TableRow<Task> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && !row.isEmpty()) {
+                    openTaskDetail(row.getItem());
+                }
+            });
+            return row;
+        });
     }
     
-    private void loadSampleTasks() {
-        if (tasks.isEmpty()) {
-            tasks.addAll(
-                new Task("Implement Login", "John", "High", "In Progress", LocalDate.now().plusDays(2)),
-                new Task("Design Database", "Sarah", "Medium", "To Do", LocalDate.now().plusDays(5)),
-                new Task("Create UI Mockups", "Mike", "High", "Done", LocalDate.now().minusDays(1)),
-                new Task("Write Documentation", "Alice", "Low", "To Do", LocalDate.now().plusDays(7)),
-                new Task("API Integration", "John", "High", "In Progress", LocalDate.now().plusDays(3)),
-                new Task("Testing", "Bob", "Medium", "To Do", LocalDate.now().plusDays(4))
-            );
-        }
+    private void loadTasksFromBackend() {
+        tasks.clear();
+        tasks.addAll(DatabaseUtil.getCurrentUserTasks());
         updateTotalTasks();
     }
     
@@ -136,10 +138,25 @@ public class TasksController {
     
     private void loadPage(String page) {
         try {
-            String fxmlFile = "/com/example/fxml/" + page.substring(0,1).toUpperCase() + page.substring(1) + ".fxml";
-            System.out.println("Loading: " + fxmlFile);
-            
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
+            String[] paths = {
+                "/com/example/fxml/" + page + ".fxml",
+                "/com/example/fxml/" + page.substring(0, 1).toUpperCase() + page.substring(1) + ".fxml"
+            };
+
+            java.net.URL fxmlUrl = null;
+            for (String path : paths) {
+                fxmlUrl = getClass().getResource(path);
+                if (fxmlUrl != null) {
+                    break;
+                }
+            }
+
+            if (fxmlUrl == null) {
+                showAlert("Error", "Could not find page: " + page);
+                return;
+            }
+
+            FXMLLoader loader = new FXMLLoader(fxmlUrl);
             Parent root = loader.load();
             
             Stage stage = (Stage) dashboardBtn.getScene().getWindow();
@@ -156,7 +173,7 @@ public class TasksController {
     
     private void handleLogout() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/fxml/Login.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/fxml/login.fxml"));
             Parent root = loader.load();
             
             Stage stage = (Stage) logoutBtn.getScene().getWindow();
@@ -203,6 +220,7 @@ public class TasksController {
             stage.showAndWait();
             
             // Refresh table
+            loadTasksFromBackend();
             taskTable.setItems(tasks);
             taskTable.refresh();
             updateTotalTasks();
@@ -261,6 +279,26 @@ public class TasksController {
         if (totalTasksLabel != null) {
             int count = taskTable.getItems().size();
             totalTasksLabel.setText("Total Tasks: " + count);
+        }
+    }
+
+    private void openTaskDetail(Task task) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/fxml/TaskDetail.fxml"));
+            Parent root = loader.load();
+
+            TaskDetailController controller = loader.getController();
+            controller.setTask(task);
+
+            Stage stage = new Stage();
+            stage.setTitle("Task Details - " + task.getName());
+            stage.setScene(new Scene(root, 900, 700));
+            stage.showAndWait();
+
+            loadTasksFromBackend();
+            taskTable.refresh();
+        } catch (IOException e) {
+            showAlert("Error", "Could not open task details: " + e.getMessage());
         }
     }
     
