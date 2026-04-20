@@ -9,22 +9,29 @@ import java.util.Map;
 
 public class Database 
 {
-    final String DB_URL = "jdbc:sqlite:obsidian-flow.db";
+    String DB_URL;
     final Connection connection;
     static Database instance;
     
+
+    // Call this method before the start of the program
+    public static void initialzize(String file) {
+        if (instance != null)
+            return;
+
+        instance = new Database(file);
+    }
+
     public static Database GetInstance()
     {
-        if (instance == null)
-            instance = new Database();
-
         return instance;
     }
 
-    private Database()
+    private Database(String file)
     {
         try 
         {
+            DB_URL = String.format("jdbc:sqlite:%s", file);
             connection = DriverManager.getConnection(DB_URL);
             CreateUsersTable();
             CreateActivityLogTable();

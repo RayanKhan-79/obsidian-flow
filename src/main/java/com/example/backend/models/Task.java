@@ -1,7 +1,6 @@
 package com.example.backend.models;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 
 import com.example.backend.database.Constants;

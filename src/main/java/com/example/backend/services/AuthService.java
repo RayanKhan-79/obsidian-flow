@@ -36,6 +36,10 @@ public class AuthService {
     }
 
     public Boolean register(String firstName, String lastName, String email, String password) {
+        
+        if (userRepo.FindByEmailAndPassword(email, password).isPresent())
+            return false;
+
         userRepo.Create(firstName, lastName, email, password);
 
         return login(email, password);

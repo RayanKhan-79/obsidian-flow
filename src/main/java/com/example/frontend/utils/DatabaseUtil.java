@@ -181,7 +181,7 @@ public final class DatabaseUtil {
 			return false;
 		}
 		return userRepo.HasPermission(backendUser.get().Id, Permissions.PROJECT_MANAGER)
-			|| userRepo.HasPermission(backendUser.get().Id, Permissions.Admin);
+			|| userRepo.HasPermission(backendUser.get().Id, Permissions.ADMIN);
 	}
 
 	private static Optional<com.example.backend.models.User> getBackendCurrentUser() {
@@ -196,7 +196,7 @@ public final class DatabaseUtil {
 		String lastName = backendUser.lname == null ? "" : backendUser.lname.trim();
 		String fullName = (firstName + " " + lastName).trim();
 		String role = "Member";
-		if (userRepo.HasPermission(backendUser.Id, Permissions.Admin)) {
+		if (userRepo.HasPermission(backendUser.Id, Permissions.ADMIN)) {
 			role = "Admin";
 		} else if (userRepo.HasPermission(backendUser.Id, Permissions.PROJECT_MANAGER)) {
 			role = "Project Manager";

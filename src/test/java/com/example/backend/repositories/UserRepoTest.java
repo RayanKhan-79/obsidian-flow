@@ -1,123 +1,73 @@
-package com.example.backend.repositories;
+﻿package com.example.backend.repositories;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.io.File;
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockedStatic;
 
 import com.example.backend.database.Database;
 import com.example.backend.enums.Permissions;
 import com.example.backend.models.User;
+import com.example.backend.testsupport.TestDatabaseHelper;
 
-/**
- * Test class for UserRepo
- *
- * Black-box test cases:
- * - Equivalence partitioning: valid/invalid emails, passwords
- * - Boundary values: null, empty
- *
- * White-box coverage:
- * - All methods in UserRepo
- */
 public class UserRepoTest {
 
+    private File dbFile;
     private UserRepo userRepo;
-    private Database mockDatabase;
-    private MockedStatic<Database> mockDatabaseStatic;
 
     @BeforeEach
     void setUp() {
-        mockDatabaseStatic = mockStatic(Database.class);
-        mockDatabase = mock(Database.class);
-        mockDatabaseStatic.when(Database::GetInstance).thenReturn(mockDatabase);
-
-        userRepo = new UserRepo(mockDatabase);
+        dbFile = TestDatabaseHelper.createTestDatabaseFile();
+        TestDatabaseHelper.initializeDatabase(dbFile);
+        userRepo = new UserRepo(Database.GetInstance());
     }
 
     @AfterEach
     void tearDown() {
-        mockDatabaseStatic.close();
+        TestDatabaseHelper.cleanupDatabaseFile(dbFile);
     }
 
     @Test
-    void testFindByEmailAndPassword_ValidCredentials_ShouldReturnUser() throws SQLException {
-        String email = "user@example.com";
-        String password = "password123";
+    void testCreateAndFindByEmailAndPassword() {
+        String email = String.format("user-%s@example.com", UUID.randomUUID());
+        String password = "Password123";
 
-        ResultSet mockResultSet = mock(ResultSet.class);
-        when(mockResultSet.next()).thenReturn(true);
-        when(mockResultSet.getLong("id")).thenReturn(1L);
-        when(mockResultSet.getString("first_name")).thenReturn("John");
-        when(mockResultSet.getString("last_name")).thenReturn("Doe");
-        when(mockResultSet.getString("email")).thenReturn(email);
-        when(mockResultSet.getString("password")).thenReturn(password);
+        User created = userRepo.Create("John", "Doe", email, password).orElseThrow();
+        Optional<User> found = userRepo.FindByEmailAndPassword(email, password);
 
-        when(mockDatabase.executeQuery(anyString(), eq(email), eq(password))).thenReturn(mockResultSet);
-
-        Optional<User> result = userRepo.FindByEmailAndPassword(email, password);
-
-        assertTrue(result.isPresent());
-        assertEquals("John", result.get().fname);
+        assertTrue(found.isPresent());
+        assertEquals(created.Id, found.get().Id);
+        assertEquals(email, found.get().email);
     }
 
     @Test
-    void testFindByEmailAndPassword_InvalidCredentials_ShouldReturnEmpty() throws SQLException {
-        ResultSet mockResultSet = mock(ResultSet.class);
-        when(mockResultSet.next()).thenReturn(false);
+    void testAddAndRemovePermissionUpdatesDatabase() {
+        String email = String.format("perm-%s@example.com", UUID.randomUUID());
+        User user = userRepo.Create("Perm", "User", email, "password").orElseThrow();
 
-        when(mockDatabase.executeQuery(anyString(), any(), any())).thenReturn(mockResultSet);
-
-        Optional<User> result = userRepo.FindByEmailAndPassword("invalid", "wrong");
-
-        assertTrue(result.isEmpty());
+        assertFalse(userRepo.HasPermission(user.Id, Permissions.PROJECT_MANAGER));
+        assertTrue(userRepo.AddPermission(user.Id, Permissions.PROJECT_MANAGER));
+        assertTrue(userRepo.HasPermission(user.Id, Permissions.PROJECT_MANAGER));
+        assertTrue(userRepo.RemovePermission(user.Id, Permissions.PROJECT_MANAGER));
+        assertFalse(userRepo.HasPermission(user.Id, Permissions.PROJECT_MANAGER));
     }
 
     @Test
-    void testAddPermission_Success_ShouldReturnTrue() throws SQLException {
-        when(mockDatabase.executeUpdate(anyString(), any(), any())).thenReturn(1);
+    void testExistsByEmailAndGetAllReturnsCreatedUser() {
+        String email = String.format("exists-%s@example.com", UUID.randomUUID());
+        userRepo.Create("Exists", "User", email, "password").orElseThrow();
 
-        boolean result = userRepo.AddPermission(1L, Permissions.PROJECT_MANAGER);
+        assertTrue(userRepo.ExistsByEmail(email));
+        assertFalse(userRepo.ExistsByEmail("missing@example.com"));
 
-        assertTrue(result);
-    }
-
-    @Test
-    void testAddPermission_Failure_ShouldReturnFalse() throws SQLException {
-        when(mockDatabase.executeUpdate(anyString(), any(), any())).thenThrow(SQLException.class);
-
-        boolean result = userRepo.AddPermission(1L, Permissions.PROJECT_MANAGER);
-
-        assertFalse(result);
-    }
-
-    @Test
-    void testHasPermission_True_ShouldReturnTrue() throws SQLException {
-        ResultSet mockResultSet = mock(ResultSet.class);
-        when(mockResultSet.next()).thenReturn(true);
-
-        when(mockDatabase.executeQuery(anyString(), any(), any())).thenReturn(mockResultSet);
-
-        boolean result = userRepo.HasPermission(1L, Permissions.PROJECT_MANAGER);
-
-        assertTrue(result);
-    }
-
-    @Test
-    void testHasPermission_False_ShouldReturnFalse() throws SQLException {
-        ResultSet mockResultSet = mock(ResultSet.class);
-        when(mockResultSet.next()).thenReturn(false);
-
-        when(mockDatabase.executeQuery(anyString(), any(), any())).thenReturn(mockResultSet);
-
-        boolean result = userRepo.HasPermission(1L, Permissions.PROJECT_MANAGER);
-
-        assertFalse(result);
+        List<User> users = userRepo.GetAll();
+        assertFalse(users.isEmpty());
+        assertTrue(users.stream().anyMatch(u -> email.equals(u.email)));
     }
 }
