@@ -1,7 +1,6 @@
 package com.example.backend.models;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 
 import com.example.backend.database.Constants;
@@ -36,9 +35,8 @@ public class Task
             dueDate = dueDateRaw == null || dueDateRaw.isBlank() ? null : LocalDateTime.parse(dueDateRaw);
             createdDate = LocalDateTime.parse(rs.getString(Constants.CREATED_DATE));            
 
-        } catch (SQLException e) {
-            System.out.println("Task Parsing Error");
-            System.exit(1);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to parse Task", e);
         }
     }
 }

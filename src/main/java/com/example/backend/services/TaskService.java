@@ -23,12 +23,14 @@ public class TaskService {
     private final AuthService authService;
     private final ProjectRepo projectRepo;
     private final TaskRepo taskRepo;
+    private final ActivityLogService logService;
     private final UserRepo userRepo;
 
     private TaskService() {
         authService = AuthService.GetInstance();
         projectRepo = new ProjectRepo(Database.GetInstance());
         taskRepo = new TaskRepo(Database.GetInstance());
+        logService = ActivityLogService.GetInstance();
         userRepo = new UserRepo(Database.GetInstance());
     }
 
@@ -62,7 +64,8 @@ public class TaskService {
         if (assignedUserId != null && userRepo.Find(assignedUserId).isEmpty())
             return Optional.empty();
 
-        return taskRepo.Create(
+        
+        Task task = taskRepo.Create(
             projectId,
             title.trim(),
             description,
@@ -70,7 +73,14 @@ public class TaskService {
             priority,
             TaskStatus.PENDING.toString(),
             dueDate != null ? dueDate.toString() : null
-        );
+        ).get();
+        
+        logService.addLogMessage(String.format(
+            "%s added a new task \"%s\" on project \"%s\"",
+            current.email,  task.title, projectOpt.get().title
+        ));
+        
+        return Optional.of(task);
     }
 
     public boolean updateTask(

@@ -24,8 +24,7 @@ public class User
             password = rs.getString(Constants.PASSWORD);
             
         } catch (SQLException e) {
-            System.out.println("User Parsing Error");
-            System.exit(1);
+            throw new RuntimeException("Failed to parse User", e);
         }
     }
 }

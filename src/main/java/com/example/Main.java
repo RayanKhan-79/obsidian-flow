@@ -1,5 +1,7 @@
 package com.example;
 
+import com.example.backend.database.Database;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -48,6 +50,7 @@ public class Main extends Application {
     }
     
     public static void main(String[] args) {
+        Database.initialzize("obsidian-flow.db");
         launch(args);
     }
 }
