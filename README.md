@@ -127,7 +127,6 @@ obsidian-flow/
 │               ├── services/                      # Service layer tests
 │               └── testsupport/                   # Test utilities and fixtures
 ├── pom.xml                                        # Maven configuration
-├── SOFTWARE_TEST_PLAN.md                          # Comprehensive testing strategy
 └── README.md                                      # This file
 ```
 
